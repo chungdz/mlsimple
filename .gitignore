@@ -1,0 +1,15 @@
+*__pycache__*
+*checkpoint\.ipynb*
+\.ipynb_checkpoints
+\.vs*
+/data/
+/para/
+/swin_para/
+/mvit_para/
+/ir/
+/Test_GeM.ipynb
+/cifar100/
+/landmark/
+/cps/
+
+Class unify.ipynb

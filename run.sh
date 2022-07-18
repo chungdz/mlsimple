@@ -1,3 +1,4 @@
 mkdir data cps
-python -m preporcess.get_meta
+python -m preprocess.get_meta
 python train.py
+python train.py --with_id=0

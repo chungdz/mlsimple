@@ -8,8 +8,10 @@ class MGTIR(nn.Module):
         super(MGTIR, self).__init__()
         
         self.hidden = cfg.hidden
+        self.idlen = len(cfg.meta['dicts'])
+        self.flen = len(cfg.meta['features'])
         self.seq = nn.Sequential(
-            nn.Linear(12, self.hidden),
+            nn.Linear(self.flen, self.hidden),
             nn.ReLU()
         )
         self.seq2 = nn.Sequential(
@@ -20,20 +22,18 @@ class MGTIR(nn.Module):
             nn.Linear(self.hidden + self.hidden // 2, 1),
             nn.Sigmoid())
         self.embLayer = nn.ModuleList([nn.Embedding(len(d), cfg.emb_size) for d in cfg.meta['dicts']])
-        self.idlen = len(cfg.meta['dicts'])
-        
         
     def predict(self, finputs, idinputs):
         embs = []
         for i in range(self.idlen):
-            embs.append(self.embLayer(idinputs[:, i]))
+            embs.append(self.embLayer[i](idinputs[:, i]))
         embt = torch.cat(embs, dim=-1)
-        concated = torch.cat([self.seq1(finputs), self.seq2(embt)], dim=-1)
+        concated = torch.cat([self.seq(finputs), self.seq2(embt)], dim=-1)
         return self.seq3(concated)
 
     def forward(self, finputs, idinputs, labels):
 
-        logits = self.seq(finputs, idinputs)
+        logits = self.predict(finputs, idinputs)
         loss = F.binary_cross_entropy(logits.squeeze(), labels)
 
         return {

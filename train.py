@@ -3,6 +3,7 @@ import numpy as np
 import json
 import pandas as pd
 from nn_modules.mgtir import MGTIR
+from nn_modules.noid import NoID
 from utils.train_util import set_seed
 from torch.utils.data import DataLoader
 from utils.ds import ClassificationTrainDS, collate_fn
@@ -30,12 +31,14 @@ parser.add_argument("--resume_checkpoint", default=None, type=str, help='''wheth
                             in the path and continue the epoch of training after 20 steps''')
 parser.add_argument("--filep", default="sample.tsv", type=str,
                         help="train file")
+parser.add_argument("--with_id", default=1, type=int,
+                        help="default has id")
 args = parser.parse_args()
 
 print('load config')
 cfg = NNConfig(args.dpath)
 df = pd.read_csv(os.path.join(args.dpath, args.filep), sep='\t')
-dlen = df.shape(0)
+dlen = df.shape[0]
 train_size = dlen * 4 // 5
 trainset = df[:train_size]
 validset = df[train_size:]
@@ -44,7 +47,10 @@ trainset = ClassificationTrainDS(cfg, trainset)
 validset = ClassificationTrainDS(cfg, validset)
 
 print('load model')
-model = MGTIR(cfg)
+if args.with_id == 1:
+    model = MGTIR(cfg)
+else:
+    model = NoID(cfg)
 
 print('load trainer')
 training_args = TrainingArguments(

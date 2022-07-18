@@ -30,8 +30,8 @@ for idname in tqdm(id_feature):
     cdict = {}
     idx = 0
     for v in df[idname]:
-        if v not in cdict:
-            cdict[v] = idx
+        if str(v) not in cdict:
+            cdict[str(v)] = idx
             idx += 1
     idxdicts.append(cdict)
 

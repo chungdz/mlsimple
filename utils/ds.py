@@ -12,7 +12,7 @@ class ClassificationTrainDS(Dataset):
         self.dicts = cfg['idxdicts']
         self.minlist = np.array(cfg['minlist'])
         self.flen = np.arrat(cfg['maxlist']) - np.array(cfg['minlist'])
-        self.target = df['clicked'].values
+        self.target = df['m:Click'].values
 
     def __getitem__(self, index):
         finputs = (self.finputs[index] - self.minlist) / self.flen

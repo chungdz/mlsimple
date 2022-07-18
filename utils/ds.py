@@ -6,17 +6,22 @@ import numpy as np
 import pandas as pd
 
 class ClassificationTrainDS(Dataset):
-    def __init__(self, cfg):
-        df = pd.read_csv(os.path.join(cfg.dpath, 'test_small.tsv'), sep='\t')
-        self.ds = df.values[:, 10:].astype(float)
-        self.target = df.values[:, 0].astype(int)
+    def __init__(self, cfg, df):
+        self.finputs = df[cfg['features']].values
+        self.idinputs = df[cfg['id_feature']].values
+        self.dicts = cfg['idxdicts']
+        self.minlist = np.array(cfg['minlist'])
+        self.flen = np.arrat(cfg['maxlist']) - np.array(cfg['minlist'])
+        self.target = df['clicked'].values
 
     def __getitem__(self, index):
-        inputs = self.ds[index]
+        finputs = (self.finputs[index] - self.minlist) / self.flen
+        idinputs = np.array([self.dicts[i][cid] for i, cid in enumerate(self.idinputs[index])])
         label = self.target[index]
 
         return {
-            "inputs": torch.FloatTensor(inputs),
+            "finputs": torch.FloatTensor(finputs),
+            "idinputs": torch.LongTensor(idinputs),
             'label': label
         }
 
@@ -25,6 +30,7 @@ class ClassificationTrainDS(Dataset):
 
 def collate_fn(batch):
     return {
-        'inputs': torch.stack([x['inputs'] for x in batch]),
+        'finputs': torch.stack([x['finputs'] for x in batch]),
+        "idinputs" : torch.stack([x['idinputs'] for x in batch]),
         'labels': torch.FloatTensor([x['label'] for x in batch])
     }

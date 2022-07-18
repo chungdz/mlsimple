@@ -28,14 +28,20 @@ parser.add_argument("--save_path", default='cps', type=str, help="path to save t
 parser.add_argument("--resume_checkpoint", default=None, type=str, help='''whether to start training from scratch 
                             or load parameter saved before and continue training. For example, if start_epoch=/mnt/cifar/checkpoint-20, then model will load parameter 
                             in the path and continue the epoch of training after 20 steps''')
+parser.add_argument("--filep", default="sample.tsv", type=str,
+                        help="train file")
 args = parser.parse_args()
 
 print('load config')
 cfg = NNConfig(args.dpath)
-
+df = pd.read_csv(os.path.join(args.dpath, args.filep), sep='\t')
+dlen = df.shape(0)
+train_size = dlen * 4 // 5
+trainset = df[:train_size]
+validset = df[train_size:]
 print('load dataset')
-trainset = ClassificationTrainDS(cfg)
-validset = ClassificationTrainDS(cfg)
+trainset = ClassificationTrainDS(cfg, trainset)
+validset = ClassificationTrainDS(cfg, validset)
 
 print('load model')
 model = MGTIR(cfg)

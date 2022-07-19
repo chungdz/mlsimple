@@ -1,3 +1,5 @@
+source ~/.bashrc
+
 mkdir data cps
 python -m preprocess.get_meta
 python train.py

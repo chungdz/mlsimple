@@ -31,13 +31,16 @@ parser.add_argument("--resume_checkpoint", default=None, type=str, help='''wheth
                             in the path and continue the epoch of training after 20 steps''')
 parser.add_argument("--filep", default="sample.tsv", type=str,
                         help="train file")
+parser.add_argument("--headp", default="header.tsv", type=str,
+                        help="train file")
 parser.add_argument("--with_id", default=1, type=int,
                         help="default has id")
 args = parser.parse_args()
 
 print('load config')
 cfg = NNConfig(args.dpath)
-df = pd.read_csv(os.path.join(args.dpath, args.filep), sep='\t')
+header = pd.read_csv(os.path.join(args.dpath, args.headp), sep='\t')
+df = pd.read_csv(os.path.join(args.dpath, args.filep), sep='\t', names=header.columns)
 dlen = df.shape[0]
 train_size = dlen * 4 // 5
 trainset = df[:train_size]
@@ -63,6 +66,7 @@ training_args = TrainingArguments(
     evaluation_strategy="epoch",
     save_strategy="epoch",
     logging_strategy="epoch",
+    metric_for_best_model="eval_f1_score",
     # logging_steps=1,
     num_train_epochs=args.epoch,
     fp16=False,

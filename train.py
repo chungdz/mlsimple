@@ -23,8 +23,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--dpath", default="data", type=str,
                         help="root path of all data")
 parser.add_argument("--epoch", default=3, type=int, help="training epoch")
-parser.add_argument("--batch_size", default=32, type=int, help="training batch size used in Pytorch DataLoader")
-parser.add_argument("--lr", default=5e-4, type=float, help="Learning rate")
+parser.add_argument("--batch_size", default=8, type=int, help="training batch size used in Pytorch DataLoader")
+parser.add_argument("--lr", default=0.001, type=float, help="Learning rate")
 parser.add_argument("--save_path", default='cps', type=str, help="path to save training model parameters")
 parser.add_argument("--resume_checkpoint", default=None, type=str, help='''whether to start training from scratch 
                             or load parameter saved before and continue training. For example, if start_epoch=/mnt/cifar/checkpoint-20, then model will load parameter 

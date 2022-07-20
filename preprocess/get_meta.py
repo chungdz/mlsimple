@@ -10,12 +10,16 @@ parser.add_argument("--dpath", default="data", type=str,
                         help="root path of all data")
 parser.add_argument("--filep", default="sample.tsv", type=str,
                         help="train file")
+parser.add_argument("--headp", default="header.tsv", type=str,
+                        help="train file")
 args = parser.parse_args()
 
 filep = os.path.join(args.dpath, args.filep)
+headp = os.path.join(args.dpath, args.headp)
 outp = os.path.join(args.dpath, "meta_info.json")
-
-df = pd.read_csv(filep, sep='\t')
+print('load data')
+header = pd.read_csv(headp, sep='\t')
+df = pd.read_csv(filep, sep='\t', names=header.columns)
 
 flist = [x for x in list(df.columns) if 'Feature' in x]
 min_list = []

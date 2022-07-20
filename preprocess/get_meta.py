@@ -21,6 +21,8 @@ print('load data')
 header = pd.read_csv(headp, sep='\t')
 df = pd.read_csv(filep, sep='\t', names=header.columns)
 
+print(df['m:Click'].value_counts())
+
 flist = [x for x in list(df.columns) if 'Feature' in x]
 min_list = []
 max_list = []

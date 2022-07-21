@@ -84,11 +84,17 @@ flist = ["Feature_1_garbage1_none",
 "Feature_7240_RTImpressions_add1thenlogthenmultiplyby1000_5",
 "Feature_7240_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5"
 ]
-min_list = []
-max_list = []
+to_minus = []
+to_div = []
 for fname in flist:
-    min_list.append(int(df[fname].min()))
-    max_list.append(int(df[fname].max()))
+    vc = df[fname].value_counts()
+    vlen = len(vc)
+    if vlen <= 2:
+        to_minus.append(0)
+        to_div.append(1)
+    else:
+        to_minus.append(float(df[fname].mean()))
+        to_div.append(float(df[fname].std()))
 
 id_feature = ["m:AdId", "m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:ClientID", "m:TagId", "m:PublisherFullDomainHash", "m:PublisherId", "m:UserAgentNormalizedHash","m:DeviceOSHash"]
 idxdicts = []
@@ -103,8 +109,8 @@ for idname in tqdm(id_feature):
 
 infodict = {
     "features": flist,
-    "minlist": min_list,
-    "maxlist": max_list,
+    "to_minus": to_minus,
+    "to_div": to_div,
     "ids": id_feature,
     "dicts": idxdicts
 }

@@ -11,21 +11,8 @@ class ClassificationTrainDS(Dataset):
         self.idinputs = df[cfg.meta['ids']].values
         self.dicts = cfg.meta['dicts']
 
-        to_sub = []
-        to_div = []
-        for cmin, cmax in zip(cfg.meta['maxlist'], cfg.meta['minlist']):
-            if cmin != cmax:
-                to_sub.append(cmin)
-                to_div.append(cmax - cmin)
-            else:
-                to_sub.append(0)
-                if cmin != 0:
-                    to_div.append(cmin)
-                else:
-                    to_div.append(1)
-
-        self.to_sub = np.array(to_sub)
-        self.to_div = np.array(to_div)
+        self.to_sub = np.array(cfg.meta['to_minus'])
+        self.to_div = np.array(cfg.meta['to_div'])
         self.target = df['m:Click'].values
 
     def __getitem__(self, index):

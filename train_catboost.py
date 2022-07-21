@@ -71,3 +71,6 @@ model = CatBoostClassifier(iterations=200,
                         one_hot_max_size=8,
                         l2_leaf_reg=3,
                         eval_metric=['AUC', 'F1'])
+
+model.fit(train_pool, early_stopping_rounds=args.esr, eval_set=test_pool, use_best_model=True, log_cout=open('result/output.txt', 'w'))
+model.save_model('para/catboost_{}.cbm'.format(i))

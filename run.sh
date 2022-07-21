@@ -9,3 +9,4 @@ python train.py --with_id=0
 python -m preprocess.get_meta --dpath=/data/yunfanhu/mannual --filep=sample_1M.tsv
 python train.py --dpath=/data/yunfanhu/mannual --filep=sample_1M.tsv
 
+python train_catboost.py  --dpath=/data/yunfanhu/mannual --filep=sample_1M.tsv

@@ -24,6 +24,19 @@ df = pd.read_csv(filep, sep='\t', names=header.columns)
 print(df['m:Click'].value_counts())
 
 # flist = [x for x in list(df.columns) if 'Feature' in x]
+# id_feature = ["m:AdId", "m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:ClientID", "m:TagId", "m:PublisherFullDomainHash", "m:PublisherId", "m:UserAgentNormalizedHash","m:DeviceOSHash"]
+id_feature = [
+                # "m:AdId", 
+                "m:OrderId", 
+                "m:CampaignId", 
+                "m:AdvertiserId", 
+                # "m:ClientID", 
+                "m:TagId", 
+                "m:PublisherFullDomainHash", 
+                "m:PublisherId", 
+                "m:UserAgentNormalizedHash",
+                "m:DeviceOSHash"]
+
 flist = ["Feature_1_garbage1_none",
 "Feature_1_COECUsingClicks_add1thenlogthenmultiplyby1000",
 "Feature_1_ExpectedClicks_add1thenlogthenmultiplyby1000",
@@ -96,7 +109,6 @@ for fname in flist:
         to_minus.append(float(df[fname].mean()))
         to_div.append(float(df[fname].std()))
 
-id_feature = ["m:AdId", "m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:ClientID", "m:TagId", "m:PublisherFullDomainHash", "m:PublisherId", "m:UserAgentNormalizedHash","m:DeviceOSHash"]
 idxdicts = []
 for idname in tqdm(id_feature):
     cdict = {}

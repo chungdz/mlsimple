@@ -27,7 +27,7 @@ class CatBoostEvalMetricAUC(object):
         # the larger metric value the better
         return True
 
-    def evaluate(self, approxes, target, weight):
+    def evaluate(self, approxes, target, weight=None):
         assert len(approxes) == 1
         assert len(target) == len(approxes[0])
         preds = np.array(approxes[0])

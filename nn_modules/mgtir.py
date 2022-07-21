@@ -12,11 +12,11 @@ class MGTIR(nn.Module):
         self.flen = len(cfg.meta['features'])
         self.seq = nn.Sequential(
             nn.Linear(self.flen, self.hidden),
-            nn.Sigmoid()
+            nn.ReLU()
         )
         self.seq2 = nn.Sequential(
             nn.Linear(self.idlen * cfg.emb_size, self.hidden // 2),
-            nn.Sigmoid()
+            nn.ReLU()
         )
         self.seq3 = nn.Sequential(
             nn.Linear(self.hidden + self.hidden // 2, 1),

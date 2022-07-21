@@ -60,7 +60,7 @@ with torch.no_grad():
         batch_res.extend(res.numpy().tolist())
         labels.extend(data['labels'].numpy().tolist())
 
-print("AUC": roc_auc_score(labels, batch_res))
+print("AUC", roc_auc_score(labels, batch_res))
 
 # df = pd.DataFrame(zip(batch_res, labels), columns=['predict', 'label'])
 # sorted_df = df.sort_values(by='predict')

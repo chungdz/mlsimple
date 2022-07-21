@@ -99,8 +99,6 @@ def cal_metric(labels, preds, metrics):
 def compute_metrics(p):
     y_pred = p.predictions.flatten()
     return {
-        "accuracy": accuracy_score(p.label_ids, y_pred),
-        "f1_score": f1_score(p.label_ids, y_pred),
         "AUC": roc_auc_score(p.label_ids, y_pred),
         "MRR": mrr_score(p.label_ids, y_pred),
         "nDCG": ndcg_score(p.label_ids, y_pred, k=y_pred.shape[0] // 10) 

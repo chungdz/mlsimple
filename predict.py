@@ -60,15 +60,11 @@ with torch.no_grad():
         batch_res.extend(res.numpy().tolist())
         labels.extend(data['labels'].numpy().tolist())
 
-print({
-        "accuracy": accuracy_score(labels, batch_res),
-        "f1_score": f1_score(labels, batch_res),
-        "AUC": roc_auc_score(labels, batch_res)
-    })
+print("AUC": roc_auc_score(labels, batch_res))
 
-df = pd.DataFrame(zip(batch_res, labels), columns=['predict', 'label'])
-sorted_df = df.sort_values(by='predict')
-sorted_df.to_csv('results/predict.csv', index=None)
+# df = pd.DataFrame(zip(batch_res, labels), columns=['predict', 'label'])
+# sorted_df = df.sort_values(by='predict')
+# sorted_df.to_csv('results/predict.csv', index=None)
 
 
 

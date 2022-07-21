@@ -32,7 +32,7 @@ class CatBoostEvalMetricAUC(object):
         assert len(target) == len(approxes[0])
         preds = np.array(approxes[0])
         target = np.array(target)
-        return roc_auc_score(target, preds)
+        return roc_auc_score(target, preds), len(preds) if weight is None else sum(weight)
 
 set_seed(7)
 

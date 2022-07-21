@@ -97,11 +97,10 @@ def cal_metric(labels, preds, metrics):
     return res
 
 def compute_metrics(p):
-    y_pred = np.argmax(p.predictions, axis=1)
     return {
-        "accuracy": accuracy_score(p.label_ids, y_pred),
-        "f1_score": f1_score(p.label_ids, y_pred),
-        "AUC": roc_auc_score(p.label_ids, y_pred),
-        "MRR": mrr_score(p.label_ids, y_pred),
-        "nDCG": ndcg_score(p.label_ids, y_pred, k=y_pred.shape[0] // 10) 
+        "accuracy": accuracy_score(p.label_ids, p.predictions),
+        "f1_score": f1_score(p.label_ids, p.predictions),
+        "AUC": roc_auc_score(p.label_ids, p.predictions),
+        "MRR": mrr_score(p.label_ids, p.predictions),
+        "nDCG": ndcg_score(p.label_ids, p.predictions, k=p.predictions.shape[0] // 10) 
     }

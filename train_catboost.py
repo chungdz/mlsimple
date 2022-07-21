@@ -17,6 +17,7 @@ import torch.nn.functional as F
 from datasets import load_dataset, load_metric
 from transformers import Trainer, TrainingArguments
 from catboost import CatBoostClassifier, Pool
+import lightgbm as lgb
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
 class CatBoostEvalMetricAUC(object):
@@ -58,10 +59,16 @@ print('load config')
 cfg = NNConfig(args.dpath)
 header = pd.read_csv(os.path.join(args.dpath, args.headp), sep='\t')
 df = pd.read_csv(os.path.join(args.dpath, args.filep), sep='\t', names=header.columns)
+
+for index, idname in enumerate(cfg.idlist):
+    cdict = cfg.meta['dicts'][index]
+    df[idname] = df[idname].map(cdict)
+
 dlen = df.shape[0]
 train_size = dlen * 4 // 5
-
-wholeset = df[cfg.flist + cfg.idlist]
+flist = [x for x in list(df.columns) if 'Feature' in x]
+wholeset = df[flist + cfg.idlist]
+id_indexes = np.arange(len(cfg.flist), len(cfg.flist + cfg.idlist)).tolist()
 wholelabel = df['m:Click']
 
 trainset = wholeset[:train_size]
@@ -69,25 +76,39 @@ trainlabel = wholelabel[:train_size]
 validset = wholeset[train_size:]
 validlabel = wholelabel[train_size:]
 
-train_pool = Pool(trainset, 
-                  trainlabel, 
-                  cat_features=cfg.idlist,
-                  feature_names=list(trainset.columns))
-test_pool = Pool(validset,
-                validlabel,
-                cat_features=cfg.idlist,
-                feature_names=list(validset.columns))
+# train_pool = Pool(trainset, 
+#                   trainlabel, 
+#                   cat_features=cfg.idlist,
+#                   feature_names=list(trainset.columns))
+# test_pool = Pool(validset,
+#                 validlabel,
+#                 cat_features=cfg.idlist,
+#                 feature_names=list(validset.columns))
 
-model = CatBoostClassifier(iterations=200, 
-                        depth=6,
-                        border_count=254,
-                        learning_rate=1, 
-                        loss_function='Logloss',
-                        random_strength=1,
-                        one_hot_max_size=8,
-                        l2_leaf_reg=3,
-                        eval_metric=CatBoostEvalMetricAUC)
+# model = CatBoostClassifier(iterations=200, 
+#                         depth=6,
+#                         border_count=254,
+#                         learning_rate=1, 
+#                         loss_function='Logloss',
+#                         random_strength=1,
+#                         one_hot_max_size=8,
+#                         l2_leaf_reg=3)
 
-model.fit(train_pool, early_stopping_rounds=5, eval_set=test_pool, use_best_model=True, log_cout=open('result/output.txt', 'w'))
-model.save_model('para/catboost.cbm')
+# model.fit(train_pool, early_stopping_rounds=5, eval_set=test_pool, use_best_model=True, log_cout=open('result/output.txt', 'w'))
+# model.save_model('para/catboost.cbm')
 
+params = {'num_leaves': 31, 'objective': 'binary', 'metric': ['auc', 'f1']}
+lgb_train = lgb.Dataset(trainset.values, trainlabel.values, categorical_feature=id_indexes)
+lgb_eval = lgb.Dataset(validset.values, validlabel.values, categorical_feature=id_indexes, reference=lgb_train)
+
+results = {}
+gbm = lgb.train(params,
+            lgb_train,
+            num_boost_round=200,
+            valid_sets=lgb_eval,
+            categorical_feature=id_indexes,
+            evals_result=results,
+            early_stopping_rounds=20)
+
+gbm.save_model('para/lgbm.txt')
+print(results)

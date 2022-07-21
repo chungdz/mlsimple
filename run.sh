@@ -7,7 +7,7 @@ python train.py
 python train.py --with_id=0
 python train_catboost.py
 
-python predict --load_from=data/checkpoint-250/pytorch_model.bin
+python predict.py --load_from=cps/checkpoint-250/pytorch_model.bin
 
 python -m preprocess.get_meta --dpath=/data/yunfanhu/mannual --filep=sample_1M.tsv
 python train.py --dpath=/data/yunfanhu/mannual --filep=sample_1M.tsv

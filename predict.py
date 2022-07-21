@@ -40,7 +40,7 @@ df = pd.read_csv(os.path.join(args.dpath, args.filep), sep='\t', names=header.co
 
 print('load dataset')
 dataset = ClassificationTrainDS(cfg, df)
-data_loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=6, pin_memory=True)
+data_loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=6, pin_memory=True, collate_fn=collate_fn)
 
 print('load model')
 if args.with_id == 1:

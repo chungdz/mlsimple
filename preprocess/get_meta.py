@@ -106,8 +106,10 @@ for fname in flist:
         to_minus.append(0)
         to_div.append(1)
     else:
-        to_minus.append(float(df[fname].mean()))
-        to_div.append(float(df[fname].std()))
+        # to_minus.append(float(df[fname].mean()))
+        # to_div.append(float(df[fname].std()))
+        to_minus.append(float(df[fname].min()))
+        to_div.append(float(df[fname].max()) - float(df[fname].min()))
 
 idxdicts = []
 for idname in tqdm(id_feature):

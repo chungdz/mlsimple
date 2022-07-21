@@ -17,6 +17,22 @@ import torch.nn.functional as F
 from datasets import load_dataset, load_metric
 from transformers import Trainer, TrainingArguments
 from catboost import CatBoostClassifier, Pool
+from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
+
+class CatBoostEvalMetricAUC(object):
+    def get_final_error(self, error, weight):
+        return error
+
+    def is_max_optimal(self):
+        # the larger metric value the better
+        return True
+
+    def evaluate(self, approxes, target, weight):
+        assert len(approxes) == 1
+        assert len(target) == len(approxes[0])
+        preds = np.array(approxes[0])
+        target = np.array(target)
+        return roc_auc_score(target, preds)
 
 set_seed(7)
 
@@ -70,7 +86,7 @@ model = CatBoostClassifier(iterations=200,
                         random_strength=1,
                         one_hot_max_size=8,
                         l2_leaf_reg=3,
-                        eval_metric=['AUC', 'F1'])
+                        eval_metric=CatBoostEvalMetricAUC)
 
 model.fit(train_pool, early_stopping_rounds=5, eval_set=test_pool, use_best_model=True, log_cout=open('result/output.txt', 'w'))
 model.save_model('para/catboost.cbm')

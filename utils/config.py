@@ -70,4 +70,14 @@ class NNConfig():
                 "Feature_7240_RTImpressions_add1thenlogthenmultiplyby1000_5",
                 "Feature_7240_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5"
                 ]
-        self.idlist = ["m:AdId", "m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:ClientID", "m:TagId", "m:PublisherFullDomainHash", "m:PublisherId", "m:UserAgentNormalizedHash","m:DeviceOSHash"]
+        self.idlist = [
+                    # "m:AdId", 
+                    "m:OrderId", 
+                    "m:CampaignId", 
+                    "m:AdvertiserId", 
+                    # "m:ClientID", 
+                    "m:TagId", 
+                    "m:PublisherFullDomainHash", 
+                    "m:PublisherId", 
+                    "m:UserAgentNormalizedHash",
+                    "m:DeviceOSHash"]

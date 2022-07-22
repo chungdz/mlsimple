@@ -14,6 +14,7 @@ parser.add_argument("--vfilep", default="valid.tsv", type=str,
                         help="valid file")
 parser.add_argument("--headp", default="header.tsv", type=str,
                         help="header file")
+parser.add_argument("--chunk_size", default=1000, type=int)
 args = parser.parse_args()
 
 filep = os.path.join(args.dpath, args.filep)
@@ -22,8 +23,8 @@ headp = os.path.join(args.dpath, args.headp)
 outp = os.path.join(args.dpath, "meta_info.json")
 print('load data')
 header = pd.read_csv(headp, sep='\t')
-df = pd.read_csv(filep, sep='\t', names=header.columns, iterator=True, chunksize=1000)
-vdf = pd.read_csv(validp, sep='\t', names=header.columns, iterator=True, chunksize=1000)
+df = pd.read_csv(filep, sep='\t', names=header.columns, iterator=True, chunksize=args.chunk_size)
+vdf = pd.read_csv(validp, sep='\t', names=header.columns, iterator=True, chunksize=args.chunk_size)
 
 # flist = [x for x in list(df.columns) if 'Feature' in x]
 # id_feature = ["m:AdId", "m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:ClientID", "m:TagId", "m:PublisherFullDomainHash", "m:PublisherId", "m:UserAgentNormalizedHash","m:DeviceOSHash"]

@@ -121,18 +121,18 @@ def get_meta_info(chunk):
         min_list = cmin_list
         max_list = cmax_list
     else:
+        assert(llen == flen)
         for i in range(llen):
             if cmin_list[i] < min_list[i]:
                 min_list[i] = cmin_list[i]
             if cmax_list[i] > max_list[i]:
                 max_list[i] = cmax_list[i]
                 
-    
     for j in range(ilen):
-        idname = id_feature[i]
+        idname = id_feature[j]
         for v in chunk[idname]:
-            if str(v) not in idxdicts[j]:
-                idxdicts[j] = idxrecord[j]
+            if v not in idxdicts[j]:
+                idxdicts[j][v] = idxrecord[j]
                 idxrecord[j] += 1
 
 for chunk in tqdm(df):

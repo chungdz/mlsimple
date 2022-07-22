@@ -107,6 +107,8 @@ idxrecord = [0] * ilen
 min_list = []
 max_list = []
 def get_meta_info(chunk):
+
+    global max_list, min_list
     
     cmin_list = []
     cmax_list = []

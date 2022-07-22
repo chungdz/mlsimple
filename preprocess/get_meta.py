@@ -4,6 +4,7 @@ import os
 from tqdm import tqdm
 import json
 import argparse
+from utils.config import NNConfig
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dpath", default="data", type=str,
@@ -26,80 +27,11 @@ header = pd.read_csv(headp, sep='\t')
 df = pd.read_csv(filep, sep='\t', names=header.columns, iterator=True, chunksize=args.chunk_size)
 vdf = pd.read_csv(validp, sep='\t', names=header.columns, iterator=True, chunksize=args.chunk_size)
 
-# flist = [x for x in list(df.columns) if 'Feature' in x]
-# id_feature = ["m:AdId", "m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:ClientID", "m:TagId", "m:PublisherFullDomainHash", "m:PublisherId", "m:UserAgentNormalizedHash","m:DeviceOSHash"]
-id_feature = [
-                # "m:AdId", 
-                "m:OrderId", 
-                "m:CampaignId", 
-                "m:AdvertiserId", 
-                # "m:ClientID", 
-                "m:TagId", 
-                "m:PublisherFullDomainHash", 
-                "m:PublisherId", 
-                "m:UserAgentNormalizedHash",
-                "m:DeviceOSHash"]
-
-flist = ["Feature_1_garbage1_none",
-"Feature_1_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_1_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_66_garbage1_none",
-"Feature_66_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_66_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_552_garbage1_none",
-"Feature_552_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_552_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_594_garbage1_none",
-"Feature_594_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_594_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_755_garbage1_none",
-"Feature_755_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_755_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_1574_garbage1_none",
-"Feature_1574_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_1574_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_1576_garbage1_none",
-"Feature_1576_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_1576_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_1627_garbage1_none",
-"Feature_1627_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_1627_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_1628_garbage1_none",
-"Feature_1628_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_1628_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_1631_garbage1_none",
-"Feature_1631_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_1631_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_25_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_25_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_97_garbage1_none",
-"Feature_97_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_97_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_576_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_576_ExpectedClicks_add1thenlogthenmultiplyby1000",
-"Feature_181_garbage1_none",
-"Feature_181_COECUsingClicks_add1thenlogthenmultiplyby1000",
-"Feature_181_ExpectedClicks_add1thenlogthenmultiplyby1000",
-# "Feature_Cascade_7",
-"Feature_66_garbage1_none_5",
-"Feature_66_RTImpressions_add1thenlogthenmultiplyby1000_5",
-"Feature_66_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5",
-"Feature_7276_garbage1_none_5",
-"Feature_7276_RTImpressions_add1thenlogthenmultiplyby1000_5",
-"Feature_7276_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5",
-"Feature_1_garbage1_none_5",
-"Feature_1_RTImpressions_add1thenlogthenmultiplyby1000_5",
-"Feature_1_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5",
-"Feature_1194_garbage1_none_5",
-"Feature_1194_RTImpressions_add1thenlogthenmultiplyby1000_5",
-"Feature_1194_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5",
-"Feature_163_garbage1_none_5",
-"Feature_163_RTImpressions_add1thenlogthenmultiplyby1000_5",
-"Feature_163_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5",
-"Feature_7240_garbage1_none_5",
-"Feature_7240_RTImpressions_add1thenlogthenmultiplyby1000_5",
-"Feature_7240_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5"
-]
+flist = [x for x in list(header.columns) if 'Feature' in x]
+id_feature = ["m:AdId", "m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:ClientID", "m:TagId", "m:PublisherFullDomainHash", "m:PublisherId", "m:UserAgentNormalizedHash","m:DeviceOSHash"]
+cfg = NNConfig()
+id_feature = cfg.idlist
+flist = cfg.flist
 
 ilen = len(id_feature)
 flen = len(flist)
@@ -153,10 +85,10 @@ for i in range(flen):
         to_div.append(max_list[i] - min_list[i])
 
 infodict = {
-    "features": flist,
+    "all_features": flist,
     "to_minus": to_minus,
     "to_div": to_div,
-    "ids": id_feature,
+    "all_ids": id_feature,
     "dicts": idxdicts
 }
 

@@ -21,7 +21,12 @@ class MGTIR(nn.Module):
         self.seq3 = nn.Sequential(
             nn.Linear(self.hidden + self.hidden // 2, 1),
             nn.Sigmoid())
-        self.embLayer = nn.ModuleList([nn.Embedding(len(d), cfg.emb_size) for d in cfg.meta['dicts']])
+        
+        selected = []
+        for idname in cfg.idlist:
+            dindex = cfg.meta['all_ids'].index(idname)
+            selected.append(cfg.meta['dicts'][dindex])
+        self.embLayer = nn.ModuleList([nn.Embedding(len(d), cfg.emb_size) for d in selected])
         
     def predict(self, finputs, idinputs):
         embs = []
@@ -34,7 +39,7 @@ class MGTIR(nn.Module):
     def forward(self, finputs, idinputs, labels):
 
         logits = self.predict(finputs, idinputs)
-        
+
         loss_weights = torch.clone(labels)
         loss_weights.masked_fill_(~loss_weights.bool(), 1/700)
         loss = F.binary_cross_entropy(logits.squeeze(), labels, weight=loss_weights)

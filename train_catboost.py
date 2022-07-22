@@ -5,7 +5,7 @@ import pandas as pd
 from nn_modules.mgtir import MGTIR
 from nn_modules.noid import NoID
 from utils.train_util import set_seed
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, IterableDataset
 from utils.ds import ClassificationTrainDS, collate_fn
 from utils.config import NNConfig
 from utils.metrics import compute_metrics

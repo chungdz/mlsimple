@@ -34,7 +34,7 @@ class MGTIR(nn.Module):
     def forward(self, finputs, idinputs, labels):
 
         logits = self.predict(finputs, idinputs)
-
+        
         loss_weights = torch.clone(labels)
         loss_weights.masked_fill_(~loss_weights.bool(), 1/700)
         loss = F.binary_cross_entropy(logits.squeeze(), labels, weight=loss_weights)

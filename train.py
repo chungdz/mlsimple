@@ -24,7 +24,7 @@ parser.add_argument("--dpath", default="data", type=str,
                         help="root path of all data")
 parser.add_argument("--max_steps", default=300, type=int, help="training total steps")
 parser.add_argument("--save_steps", default=100, type=int, help="training save steps")
-parser.add_argument("--batch_size", default=4, type=int, help="training batch size used in Pytorch DataLoader")
+parser.add_argument("--batch_size", default=8, type=int, help="training batch size used in Pytorch DataLoader")
 parser.add_argument("--lr", default=0.001, type=float, help="Learning rate")
 parser.add_argument("--save_path", default='cps', type=str, help="path to save training model parameters")
 parser.add_argument("--resume_checkpoint", default=None, type=str, help='''whether to start training from scratch 

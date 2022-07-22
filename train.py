@@ -22,8 +22,9 @@ set_seed(7)
 parser = argparse.ArgumentParser()
 parser.add_argument("--dpath", default="data", type=str,
                         help="root path of all data")
-parser.add_argument("--epoch", default=3, type=int, help="training epoch")
-parser.add_argument("--batch_size", default=32, type=int, help="training batch size used in Pytorch DataLoader")
+parser.add_argument("--max_steps", default=300, type=int, help="training total steps")
+parser.add_argument("--save_steps", default=100, type=int, help="training save steps")
+parser.add_argument("--batch_size", default=4, type=int, help="training batch size used in Pytorch DataLoader")
 parser.add_argument("--lr", default=0.001, type=float, help="Learning rate")
 parser.add_argument("--save_path", default='cps', type=str, help="path to save training model parameters")
 parser.add_argument("--resume_checkpoint", default=None, type=str, help='''whether to start training from scratch 
@@ -33,21 +34,20 @@ parser.add_argument("--filep", default="sample.tsv", type=str,
                         help="train file")
 parser.add_argument("--headp", default="header.tsv", type=str,
                         help="train file")
+parser.add_argument("--vfilep", default="valid.tsv", type=str,
+                        help="valid file")
 parser.add_argument("--with_id", default=1, type=int,
                         help="default has id")
 args = parser.parse_args()
 
 print('load config')
 cfg = NNConfig(args.dpath)
-header = pd.read_csv(os.path.join(args.dpath, args.headp), sep='\t')
-df = pd.read_csv(os.path.join(args.dpath, args.filep), sep='\t', names=header.columns)
-dlen = df.shape[0]
-train_size = dlen * 4 // 5
-trainset = df[:train_size]
-validset = df[train_size:]
+headerp = os.path.join(args.dpath, args.headp)
+trainp = os.path.join(args.dpath, args.filep)
+validp = os.path.join(args.dpath, args.vfilep)
 print('load dataset')
-trainset = ClassificationTrainDS(cfg, trainset)
-validset = ClassificationTrainDS(cfg, validset)
+trainset = ClassificationTrainDS(cfg, headerp, trainp)
+validset = ClassificationTrainDS(cfg, headerp, validp)
 
 print('load model')
 if args.with_id == 1:
@@ -61,14 +61,16 @@ training_args = TrainingArguments(
     per_device_train_batch_size=args.batch_size,
     lr_scheduler_type='linear',
     optim="adamw_torch",
-    dataloader_num_workers=8,
+    dataloader_num_workers=1,
     dataloader_pin_memory=True,
-    evaluation_strategy="epoch",
-    save_strategy="epoch",
-    logging_strategy="epoch",
+    evaluation_strategy="steps",
+    save_strategy="steps",
+    logging_strategy="steps",
     metric_for_best_model="eval_AUC",
-    # logging_steps=1,
-    num_train_epochs=args.epoch,
+    logging_steps=args.save_steps,
+    eval_steps=args.save_steps,
+    save_steps=args.save_steps,
+    max_steps=args.max_steps,
     fp16=False,
     learning_rate=args.lr,
     save_total_limit=50,

@@ -8,8 +8,8 @@ class MGTIR(nn.Module):
         super(MGTIR, self).__init__()
         
         self.hidden = cfg.hidden
-        self.idlen = len(cfg.meta['dicts'])
-        self.flen = len(cfg.meta['features'])
+        self.idlen = len(cfg.idlist)
+        self.flen = len(cfg.flist)
         self.seq = nn.Sequential(
             nn.Linear(self.flen, self.hidden),
             nn.ReLU()

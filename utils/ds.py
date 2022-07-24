@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 class ClassificationTrainDS(IterableDataset):
-    def __init__(self, cfg, headerp, filep):
+    def __init__(self, cfg, headerp, filep, chunk_size):
         super(ClassificationTrainDS).__init__()
         
         self.header = pd.read_csv(headerp, sep='\t')
@@ -30,9 +30,10 @@ class ClassificationTrainDS(IterableDataset):
         self.to_sub = to_sub
         self.to_div = to_div
         self.dicts = dicts
+        self.chunk_size = chunk_size
     
     def init_reader(self):
-        self.dfiter = iter(pd.read_csv(self.filep, sep='\t', names=self.header.columns, iterator=True, chunksize=32))
+        self.dfiter = iter(pd.read_csv(self.filep, sep='\t', names=self.header.columns, iterator=True, chunksize=self.chunk_size))
 
     def __iter__(self):
         self.init_reader()

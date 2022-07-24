@@ -25,6 +25,7 @@ parser.add_argument("--dpath", default="data", type=str,
 parser.add_argument("--max_steps", default=300, type=int, help="training total steps")
 parser.add_argument("--save_steps", default=100, type=int, help="training save steps")
 parser.add_argument("--batch_size", default=8, type=int, help="training batch size used in Pytorch DataLoader")
+parser.add_argument("--chunk_size", default=32, type=int, help="chunk_size * batch_size * GPU = real_batch_size")
 parser.add_argument("--lr", default=0.001, type=float, help="Learning rate")
 parser.add_argument("--save_path", default='cps', type=str, help="path to save training model parameters")
 parser.add_argument("--resume_checkpoint", default=None, type=str, help='''whether to start training from scratch 
@@ -46,8 +47,8 @@ headerp = os.path.join(args.dpath, args.headp)
 trainp = os.path.join(args.dpath, args.filep)
 validp = os.path.join(args.dpath, args.vfilep)
 print('load dataset')
-trainset = ClassificationTrainDS(cfg, headerp, trainp)
-validset = ClassificationTrainDS(cfg, headerp, validp)
+trainset = ClassificationTrainDS(cfg, headerp, trainp, args.chunk_size)
+validset = ClassificationTrainDS(cfg, headerp, validp, args.chunk_size)
 
 print('load model')
 if args.with_id == 1:

@@ -10,6 +10,7 @@ class MGTIR(nn.Module):
         self.hidden = cfg.hidden
         self.idlen = len(cfg.idlist)
         self.flen = len(cfg.flist)
+        self.wd = cfg.weight_decay
         self.seq = nn.Sequential(
             nn.Linear(self.flen, self.hidden),
             nn.ReLU()
@@ -41,7 +42,7 @@ class MGTIR(nn.Module):
         logits = self.predict(finputs, idinputs)
 
         loss_weights = torch.clone(labels)
-        loss_weights.masked_fill_(~loss_weights.bool(), 1/70)
+        loss_weights.masked_fill_(~loss_weights.bool(), self.wd)
         loss = F.binary_cross_entropy(logits.squeeze(), labels, weight=loss_weights)
 
         return {

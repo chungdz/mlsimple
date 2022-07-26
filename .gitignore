@@ -11,8 +11,6 @@
 /cifar100/
 /landmark/
 /cps/
-*/scopes/
-*/scopes_2/
-*/scopes_3/
+*/scopes*/
 
 Class unify.ipynb

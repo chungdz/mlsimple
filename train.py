@@ -31,6 +31,7 @@ parser.add_argument("--save_path", default='cps', type=str, help="path to save t
 parser.add_argument("--resume_checkpoint", default=None, type=str, help='''whether to start training from scratch 
                             or load parameter saved before and continue training. For example, if start_epoch=/mnt/cifar/checkpoint-20, then model will load parameter 
                             in the path and continue the epoch of training after 20 steps''')
+parser.add_argument("--additionId", action='store_true', help='whether to add AdId and UserId')
 parser.add_argument("--filep", default="sample.tsv", type=str,
                         help="train file")
 parser.add_argument("--headp", default="header.tsv", type=str,
@@ -44,7 +45,9 @@ parser.add_argument("--tfilep", default=None, type=str,
 args = parser.parse_args()
 
 print('load config')
-cfg = NNConfig(args.dpath)
+if args.additionId:
+    print('add user id and add id')
+cfg = NNConfig(args.dpath, additionId=args.additionId)
 headerp = os.path.join(args.dpath, args.headp)
 trainp = os.path.join(args.dpath, args.filep)
 validp = os.path.join(args.dpath, args.vfilep)
@@ -54,7 +57,7 @@ validset = ClassificationTrainDS(cfg, headerp, validp, args.chunk_size // 4)
 
 print('load model')
 if args.with_id == 1:
-    model = MGTIR(cfg)
+    model = MGTIR(cfg)    
 else:
     model = NoID(cfg)
 

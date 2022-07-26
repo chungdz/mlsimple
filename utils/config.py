@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 class NNConfig():
-    def __init__(self, dpath='data'):
+    def __init__(self, dpath='data', additionId=False):
 
         self.hidden = 100
         self.emb_size = 10
@@ -82,3 +82,6 @@ class NNConfig():
                     "m:PublisherId", 
                     "m:UserAgentNormalizedHash",
                     "m:DeviceOSHash"]
+        if additionId:
+            self.idlist = self.idlist + ["m:AdId", "m:ClientID"]
+

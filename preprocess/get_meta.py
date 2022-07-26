@@ -36,10 +36,11 @@ idxdicts = idxdicts = [{} for _ in range(ilen)]
 idxrecord = [0] * ilen
 min_list = []
 max_list = []
+
 def get_meta_info(chunk):
 
     global max_list, min_list
-    
+
     cmin_list = []
     cmax_list = []
     for fname in flist:
@@ -65,11 +66,25 @@ def get_meta_info(chunk):
                 idxdicts[j][v] = idxrecord[j]
                 idxrecord[j] += 1
 
+total_row = 0
+positive_row = 0
 for chunk in tqdm(df):
+    total_row += chunk.shape[0]
+    positive_row += chunk['m:Click'].sum()
     get_meta_info(chunk)
 
+print('train', total_row, positive_row, total_row - positive_row, 
+                        (total_row - positive_row) / positive_row)
+
+total_row = 0
+positive_row = 0
 for chunk in tqdm(vdf):
+    total_row += chunk.shape[0]
+    positive_row += chunk['m:Click'].sum()
     get_meta_info(chunk)
+
+print('validation', total_row, positive_row, total_row - positive_row, 
+                        (total_row - positive_row) / positive_row)
 
 to_minus = []
 to_div = []

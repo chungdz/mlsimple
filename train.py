@@ -39,6 +39,8 @@ parser.add_argument("--vfilep", default="valid.tsv", type=str,
                         help="valid file")
 parser.add_argument("--with_id", default=1, type=int,
                         help="default has id")
+parser.add_argument("--tfilep", default=None, type=str,
+                        help="test file after train")
 args = parser.parse_args()
 
 print('load config')
@@ -92,3 +94,8 @@ trainer = Trainer(model=model,
 
 print('start training')
 trainer.train(resume_from_checkpoint=args.resume_checkpoint)
+
+if not args.tfilep is None:
+    testp = os.path.join(args.dpath, args.tfilep)
+    testset = ClassificationTrainDS(cfg, headerp, testp, args.chunk_size // 4)
+    trainer.evaluate(testset)

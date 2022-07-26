@@ -14,4 +14,4 @@ python train_catboost.py  --dpath=/data/yunfanhu/mannual --filep=sample_1M.tsv
 python -m preprocess.get_meta --dpath=/data/yunfanhu/mannual --filep=train_small.tsv --vfilep=valid_small.tsv --chunk_size=50000
 
 python -m preprocess.get_meta --dpath=/data/yunfanhu/samples --filep=train.tsv --vfilep=valid.tsv --chunk_size=50000
-python train.py --dpath=/data/yunfanhu/samples --batch_size=8 --filep=train.tsv --vfilep=valid.tsv --max_steps=800000 --save_steps=80000
+python train.py --dpath=/data/yunfanhu/samples --batch_size=8 --filep=train.tsv --vfilep=valid_3M.tsv --max_steps=800000 --save_steps=80000

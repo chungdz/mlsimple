@@ -31,6 +31,12 @@ class ClassificationTrainDS(IterableDataset):
         self.to_div = to_div
         self.dicts = dicts
         self.chunk_size = chunk_size
+
+        self.has_emb = cfg.has_emb
+        if cfg.has_emb:
+            self.uemb = [x for x in list(self.header.columns) if 'Uemb' in x]
+            self.aemb = [x for x in list(self.header.columns) if 'Aemb' in x]
+            
     
     def init_reader(self):
         self.dfiter = iter(pd.read_csv(self.filep, sep='\t', names=self.header.columns, iterator=True, chunksize=self.chunk_size))
@@ -50,9 +56,13 @@ class ClassificationTrainDS(IterableDataset):
             for dindex, idname in enumerate(self.idlist):
                 cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex][str(x)])
                 
-            finputs = cur_chunk[self.flist].values
             idinputs = cur_chunk[self.idlist].values
             targets = cur_chunk["m:Click"].values
+
+            if self.has_emb:
+                finputs = cur_chunk[self.flist + self.uemb + self.aemb].values
+            else:
+                finputs = cur_chunk[self.flist].values
                 
             if not worker_info is None:  # single-process data loading, return the full iterator
                 assert(worker_info.num_workers == 1)

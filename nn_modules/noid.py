@@ -21,7 +21,7 @@ class NoID(nn.Module):
             nn.ReLU(),
             nn.Linear(10000, 1000),
             nn.ReLU(),
-            nn.Linear(10000, 1000),
+            nn.Linear(1000, 1000),
             nn.Sigmoid()
         )
         

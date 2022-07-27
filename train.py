@@ -96,7 +96,7 @@ trainer = Trainer(model=model,
 )
 
 print('start training')
-trainer.train(resume_from_checkpoint=args.resume_checkpoint)
+trainer.train(resume_from_checkpoint=True)
 
 if not args.tfilep is None:
     testp = os.path.join(args.dpath, args.tfilep)

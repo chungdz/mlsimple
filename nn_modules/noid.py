@@ -19,7 +19,7 @@ class NoID(nn.Module):
         self.seq2 = nn.Sequential(
             nn.Linear(self.flen, 10000),
             nn.ReLU(),
-            nn.Linear(10000, 10000),
+            nn.Linear(10000, 1000),
             nn.ReLU(),
             nn.Linear(10000, 1000),
             nn.Sigmoid()

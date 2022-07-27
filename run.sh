@@ -9,6 +9,7 @@ python train.py --dpath=/data/yunfanhu/mannual --batch_size=2 --filep=one_day_0.
 
 # 14 train and 7 valid
 python -m preprocess.get_meta --dpath=/data/yunfanhu/samples --filep=train.tsv --vfilep=valid.tsv --chunk_size=50000
+python -m preprocess.build_no_id_dataset --dpath=/data/yunfanhu/samples --filep=train.tsv --vfilep=valid.tsv --chunk_size=50000
 # origin
 python train.py --dpath=/data/yunfanhu/samples \
                     --batch_size=8 \

@@ -33,8 +33,8 @@ id_feature = ["m:AdId", "m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:Client
 
 for chunk in tqdm(df):
     new_chunk = chunk.drop(columns=id_feature)
-    new_chunk.to_csv(outp, header=False, index=False, mode='a')
+    new_chunk.to_csv(outp, header=False, index=False, mode='a', sep='\t')
 
 for chunk in tqdm(vdf):
     new_chunk = chunk.drop(columns=id_feature)
-    new_chunk.to_csv(voutp, header=False, index=False, mode='a')
+    new_chunk.to_csv(voutp, header=False, index=False, mode='a', sep='\t')

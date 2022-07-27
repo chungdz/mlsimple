@@ -47,7 +47,7 @@ args = parser.parse_args()
 print('load config')
 if args.additionId:
     print('add user id and add id')
-cfg = NNConfig(args.dpath, additionId=args.additionId)
+cfg = NNConfig(args.dpath, additionId=args.additionId, no_id=(args.with_id == 0))
 headerp = os.path.join(args.dpath, args.headp)
 trainp = os.path.join(args.dpath, args.filep)
 validp = os.path.join(args.dpath, args.vfilep)

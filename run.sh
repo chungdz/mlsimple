@@ -33,6 +33,15 @@ python train.py --dpath=/data/yunfanhu/samples \
                     --save_steps=320000 \
                     --with_id=0 \
                     --save_path=cps_noid
+
+python train.py --dpath=/data/yunfanhu/samples \
+                    --batch_size=2 \
+                    --filep=no_id_train.tsv \
+                    --vfilep=no_id_valid_3M.tsv \
+                    --max_steps=3200000 \
+                    --save_steps=320000 \
+                    --with_id=0 \
+                    --save_path=cps_noid2
 # add user id and add id
 python train.py --dpath=/data/yunfanhu/samples \
                     --batch_size=2 \

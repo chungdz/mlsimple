@@ -16,8 +16,16 @@ class NoID(nn.Module):
             nn.Linear(self.hidden, 1),
             nn.Sigmoid()
         )
+        self.seq2 = nn.Sequential(
+            nn.Linear(self.flen, 1000),
+            nn.ReLU(),
+            nn.Linear(1000, 1),
+            nn.Sigmoid()
+        )
         
     def predict(self, finputs, idinputs):
+        # to avoid being canceled
+        self.seq2(finputs)
         return self.seq(finputs)
 
     def forward(self, finputs, idinputs, labels):

@@ -28,7 +28,7 @@ parser.add_argument("--batch_size", default=8, type=int, help="training batch si
 parser.add_argument("--chunk_size", default=32, type=int, help="chunk_size * batch_size * GPU = real_batch_size")
 parser.add_argument("--lr", default=0.001, type=float, help="Learning rate")
 parser.add_argument("--save_path", default='cps', type=str, help="path to save training model parameters")
-parser.add_argument("--resume_checkpoint", default=None, type=str, help='''whether to start training from scratch 
+parser.add_argument("--resume_checkpoint", action='store_true', help='''whether to start training from scratch 
                             or load parameter saved before and continue training. For example, if start_epoch=/mnt/cifar/checkpoint-20, then model will load parameter 
                             in the path and continue the epoch of training after 20 steps''')
 parser.add_argument("--additionId", action='store_true', help='whether to add AdId and UserId')
@@ -96,7 +96,7 @@ trainer = Trainer(model=model,
 )
 
 print('start training')
-trainer.train(resume_from_checkpoint=True)
+trainer.train(resume_from_checkpoint=args.resume_checkpoint)
 
 if not args.tfilep is None:
     testp = os.path.join(args.dpath, args.tfilep)

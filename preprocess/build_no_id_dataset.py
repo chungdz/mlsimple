@@ -23,6 +23,7 @@ validp = os.path.join(args.dpath, args.vfilep)
 headp = os.path.join(args.dpath, args.headp)
 outp = os.path.join(args.dpath, "no_id_train.tsv")
 voutp = os.path.join(args.dpath, "no_id_valid.tsv")
+houtp = os.path.join(args.dpath, "no_id_header.tsv")
 print('load data')
 header = pd.read_csv(headp, sep='\t')
 df = pd.read_csv(filep, sep='\t', names=header.columns, iterator=True, chunksize=args.chunk_size)
@@ -30,6 +31,8 @@ vdf = pd.read_csv(validp, sep='\t', names=header.columns, iterator=True, chunksi
 
 flist = [x for x in list(header.columns) if 'Feature' in x]
 id_feature = ["m:AdId", "m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:ClientID", "m:TagId", "m:PublisherFullDomainHash", "m:PublisherId", "m:UserAgentNormalizedHash","m:DeviceOSHash"]
+
+header.drop(columns=id_feature).to_csv(houtp, index=False, sep='\t')
 
 for chunk in tqdm(df):
     new_chunk = chunk.drop(columns=id_feature)

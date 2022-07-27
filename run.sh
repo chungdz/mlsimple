@@ -38,6 +38,7 @@ python train.py --dpath=/data/yunfanhu/samples \
                     --batch_size=2 \
                     --filep=no_id_train.tsv \
                     --vfilep=no_id_valid_3M.tsv \
+                    --headp=no_id_header.tsv \
                     --max_steps=3200000 \
                     --save_steps=320000 \
                     --with_id=0 \

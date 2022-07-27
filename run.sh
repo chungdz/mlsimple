@@ -16,22 +16,29 @@ python train.py --dpath=/data/yunfanhu/samples \
                     --vfilep=valid_3M.tsv \
                     --max_steps=800000 \
                     --save_steps=80000
-# no id
+
 python train.py --dpath=/data/yunfanhu/samples \
-                    --batch_size=8 \
+                    --batch_size=4 \
                     --filep=train.tsv \
                     --vfilep=valid_3M.tsv \
-                    --max_steps=800000 \
-                    --save_steps=80000 \
+                    --max_steps=1600000 \
+                    --save_steps=160000
+# no id
+python train.py --dpath=/data/yunfanhu/samples \
+                    --batch_size=2 \
+                    --filep=train.tsv \
+                    --vfilep=valid_3M.tsv \
+                    --max_steps=3200000 \
+                    --save_steps=320000 \
                     --with_id=0 \
                     --save_path=cps_noid
 # add user id and add id
 python train.py --dpath=/data/yunfanhu/samples \
-                    --batch_size=8 \
+                    --batch_size=2 \
                     --filep=train.tsv \
                     --vfilep=valid_3M.tsv \
-                    --max_steps=800000 \
-                    --save_steps=80000 \
+                    --max_steps=3200000 \
+                    --save_steps=320000 \
                     --additionId \
                     --save_path=cps_uaid
 

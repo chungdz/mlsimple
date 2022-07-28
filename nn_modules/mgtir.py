@@ -11,6 +11,7 @@ class MGTIR(nn.Module):
         self.idlen = len(cfg.idlist)
         self.flen = len(cfg.flist)
         self.wd = cfg.weight_decay
+        self.uaemb = cfg.uaemb
         self.seq = nn.Sequential(
             nn.Linear(self.flen, self.hidden),
             nn.ReLU()
@@ -19,8 +20,12 @@ class MGTIR(nn.Module):
             nn.Linear(self.idlen * cfg.emb_size, self.hidden // 2),
             nn.ReLU()
         )
+        self.seq4 = nn.Sequential(
+            nn.Linear(self.uaemb * 2, self.hidden // 4),
+            nn.ReLU()
+        )
         self.seq3 = nn.Sequential(
-            nn.Linear(self.hidden + self.hidden // 2, 1),
+            nn.Linear(self.hidden + self.hidden // 2 + self.hidden // 4, 1),
             nn.Sigmoid())
         
         selected = []
@@ -28,18 +33,29 @@ class MGTIR(nn.Module):
             dindex = cfg.meta['all_ids'].index(idname)
             selected.append(cfg.meta['dicts'][dindex])
         self.embLayer = nn.ModuleList([nn.Embedding(len(d), cfg.emb_size) for d in selected])
+
+        self.unull_emb = nn.Parameter(torch.randn(self.uaemb))
+        self.anull_emb = nn.Parameter(torch.randn(self.uaemb))
         
-    def predict(self, finputs, idinputs):
+    def predict(self, finputs, idinputs, masks):
+
         embs = []
         for i in range(self.idlen):
             embs.append(self.embLayer[i](idinputs[:, i]))
         embt = torch.cat(embs, dim=-1)
-        concated = torch.cat([self.seq(finputs), self.seq2(embt)], dim=-1)
+
+        uemb = finputs[:, -self.uaemb * 2: -self.uaemb]
+        aemb = finputs[:, -self.uaemb:]
+        uemb.masked_fill_(masks[:, 0], self.unull_emb)
+        aemb.masked_fill_(masks[:, 1], self.anull_emb)
+        uaemb = torch.cat([uemb, aemb], dim=-1)
+
+        concated = torch.cat([self.seq(finputs[:, :-self.uaemb * 2]), self.seq2(embt), self.seq4(uaemb)], dim=-1)
         return self.seq3(concated)
 
-    def forward(self, finputs, idinputs, labels):
+    def forward(self, finputs, idinputs, masks, labels):
 
-        logits = self.predict(finputs, idinputs)
+        logits = self.predict(finputs, idinputs, masks)
 
         loss_weights = torch.clone(labels)
         loss_weights.masked_fill_(~loss_weights.bool(), self.wd)

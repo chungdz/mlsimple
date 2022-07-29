@@ -63,7 +63,7 @@ class ClassificationTrainDS(IterableDataset):
             yield {
                     "finputs": torch.FloatTensor(finputs),
                     "idinputs": torch.LongTensor(idinputs),
-                    "masks": torch.LongTensor(masks),
+                    "masks": torch.ByteTensor(masks),
                     'labels': torch.FloatTensor(targets)
             }
         

@@ -57,9 +57,7 @@ trainset = ClassificationTrainDS(cfg, headerp, trainp, args.chunk_size)
 validset = ClassificationTrainDS(cfg, headerp, validp, args.chunk_size // 4)
 
 print('load model')
-if args.has_emb:
-    model = MGTIREmb(cfg)
-elif args.with_id == 1:
+if args.with_id == 1:
     model = MGTIR(cfg)    
 else:
     model = NoID(cfg)

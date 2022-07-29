@@ -34,8 +34,8 @@ class MGTIR(nn.Module):
             selected.append(cfg.meta['dicts'][dindex])
         self.embLayer = nn.ModuleList([nn.Embedding(len(d), cfg.emb_size) for d in selected])
 
-        self.unull_emb = nn.Parameter(torch.randn(self.uaemb))
-        self.anull_emb = nn.Parameter(torch.randn(self.uaemb))
+        self.unull_emb = nn.Parameter(torch.randn(self.uaemb), requires_grad=True)
+        self.anull_emb = nn.Parameter(torch.randn(self.uaemb), requires_grad=True)
         
     def predict(self, finputs, idinputs, masks):
 
@@ -46,8 +46,17 @@ class MGTIR(nn.Module):
 
         uemb = finputs[:, -self.uaemb * 2: -self.uaemb]
         aemb = finputs[:, -self.uaemb:]
-        uemb.masked_fill_(masks[:, 0], self.unull_emb)
-        aemb.masked_fill_(masks[:, 1], self.anull_emb)
+        
+        batch_size = uemb.size(0)
+        unull_emb = self.unull_emb.repeat(batch_size, 1)
+        anull_emb = self.anull_emb.repeat(batch_size, 1)
+
+        umask = masks[:, 0].unsqueeze(-1)
+        amask = masks[:, 1].unsqueeze(-1)
+        
+        uemb = uemb * (1 - umask) + unull_emb * umask
+        aemb = aemb * (1 - amask) + anull_emb * amask
+
         uaemb = torch.cat([uemb, aemb], dim=-1)
 
         concated = torch.cat([self.seq(finputs[:, :-self.uaemb * 2]), self.seq2(embt), self.seq4(uaemb)], dim=-1)
@@ -65,7 +74,4 @@ class MGTIR(nn.Module):
             'loss': loss,
             'logits': logits
         }
-
-
-    
 

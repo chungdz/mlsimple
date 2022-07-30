@@ -89,7 +89,8 @@ training_args = TrainingArguments(
     report_to='tensorboard',
     load_best_model_at_end=True,
     seed=7,
-    data_seed=7
+    data_seed=7,
+    ignore_data_skip=True
 )
 trainer = Trainer(model=model,
     args=training_args,

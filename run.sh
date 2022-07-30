@@ -19,11 +19,13 @@ python train.py --dpath=/data/yunfanhu/samples \
                     --save_steps=80000
 
 python train.py --dpath=/data/yunfanhu/samples \
-                    --batch_size=4 \
+                    --batch_size=8 \
                     --filep=train.tsv \
                     --vfilep=valid_3M.tsv \
                     --max_steps=1600000 \
-                    --save_steps=160000
+                    --save_steps=80000 \
+                    --save_path=cps \
+                    --resume_checkpoint
 # no id
 python train.py --dpath=/data/yunfanhu/samples \
                     --batch_size=8 \

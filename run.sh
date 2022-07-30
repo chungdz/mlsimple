@@ -9,5 +9,14 @@ python train.py --dpath=/data/yunfanhu/samples_emb \
                     --filep=train.tsv \
                     --vfilep=valid_3M.tsv \
                     --max_steps=800000 \
-                    --save_steps=80000
+                    --save_steps=80000 \
+                    --save_path=cps_emb2
+
+python train.py --dpath=/data/yunfanhu/samples_emb \
+                    --batch_size=4 \
+                    --filep=train.tsv \
+                    --vfilep=valid_3M.tsv \
+                    --max_steps=1600000 \
+                    --save_steps=160000 \
+                    --save_path=cps_emb
 

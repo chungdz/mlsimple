@@ -48,7 +48,7 @@ class ClassificationTrainDS(Dataset):
         }
 
     def __len__(self):
-        return self.target.shape[0]
+        return self.targets.shape[0]
 
 def collate_fn(batch):
     return {

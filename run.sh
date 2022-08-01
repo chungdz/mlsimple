@@ -35,34 +35,12 @@ python train.py --dpath=/data/yunfanhu/samples \
                     --save_steps=80000 \
                     --with_id=0 \
                     --save_path=cps_noid
-# only use 2 GPUs too slow
-python train.py --dpath=/data/yunfanhu/samples \
-                    --batch_size=4 \
-                    --filep=train.tsv \
-                    --vfilep=valid_3M.tsv \
-                    --max_steps=1600000 \
-                    --save_steps=160000 \
-                    --with_id=0 \
-                    --save_path=cps_noid2
+# small train
+python train_rand.py --dpath=/data/yunfanhu/samples \
+                    --filep=train_5M.tsv \
+                    --vfilep=valid_1M.tsv \
+                    --epoch=10 \
+                    --save_path=cps_small
 
-python train.py --dpath=/data/yunfanhu/samples \
-                    --batch_size=2 \
-                    --filep=no_id_train.tsv \
-                    --vfilep=no_id_valid_3M.tsv \
-                    --headp=no_id_header.tsv \
-                    --max_steps=3200000 \
-                    --save_steps=320000 \
-                    --with_id=0 \
-                    --save_path=cps_noid2
-                    
-# add user id and add id
-python train.py --dpath=/data/yunfanhu/samples \
-                    --batch_size=2 \
-                    --filep=train.tsv \
-                    --vfilep=valid_3M.tsv \
-                    --max_steps=3200000 \
-                    --save_steps=320000 \
-                    --additionId \
-                    --save_path=cps_uaid
 
 

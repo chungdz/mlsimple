@@ -16,16 +16,16 @@ python train.py --dpath=/data/yunfanhu/samples \
                     --filep=train.tsv \
                     --vfilep=valid_3M.tsv \
                     --max_steps=800000 \
+                    --save_path=cps \
                     --save_steps=80000
 
 python train.py --dpath=/data/yunfanhu/samples \
                     --batch_size=8 \
                     --filep=train.tsv \
                     --vfilep=valid_3M.tsv \
-                    --max_steps=1600000 \
+                    --max_steps=800000 \
                     --save_steps=80000 \
-                    --save_path=cps \
-                    --resume_checkpoint
+                    --save_path=cps2
 # no id
 python train.py --dpath=/data/yunfanhu/samples \
                     --batch_size=8 \

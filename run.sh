@@ -40,11 +40,12 @@ python train_rand.py --dpath=/data/yunfanhu/samples \
                     --batch_size=512 \
                     --filep=train_5M.tsv \
                     --vfilep=valid_1M.tsv \
-                    --epoch=3 \
+                    --epoch=5 \
                     --save_path=cps_small
 
 
 # train lightgbm for importance
-python train_catboost.py --filep=train_5M.tsv \
+python train_catboost.py  --dpath=/data/yunfanhu/samples \
+                    --filep=train_5M.tsv \
                     --vfilep=valid_1M.tsv
                

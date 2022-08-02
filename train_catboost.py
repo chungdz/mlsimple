@@ -38,9 +38,9 @@ class CatBoostEvalMetricAUC(object):
 set_seed(7)
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--dpath", default="data", type=str,
+parser.add_argument("--dpath", default="/data/yunfanhu/samples/", type=str,
                         help="root path of all data")
-parser.add_argument("--filep", default="sample.tsv", type=str,
+parser.add_argument("--filep", default="train.tsv", type=str,
                         help="train file")
 parser.add_argument("--headp", default="header.tsv", type=str,
                         help="train file")
@@ -102,6 +102,6 @@ gbm = lgb.train(params,
 gbm.save_model('para/lgbm.txt')
 print(results)
 
-feature_imp = pd.DataFrame({'Value': gbm.feature_importance(), 'Feature': x_train.columns}).sort_values('Value', axis="columns")
+feature_imp = pd.DataFrame({'Value': gbm.feature_importance(), 'Feature': x_train.columns}).sort_values('Value', axis=0)
 print(feature_imp)
 feature_imp.to_csv('para/fimp.tsv', sep='\t', index=None)

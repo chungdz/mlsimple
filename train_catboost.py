@@ -102,6 +102,6 @@ gbm = lgb.train(params,
 gbm.save_model('para/lgbm.txt')
 print(results)
 
-feature_imp = pd.DataFrame({'Value': gbm.feature_importance(), 'Feature': x_train.columns}).sort_values(columns=['Value'])
+feature_imp = pd.DataFrame({'Value': gbm.feature_importance(), 'Feature': x_train.columns}).sort_values('Value', axis="columns")
 print(feature_imp)
 feature_imp.to_csv('para/fimp.tsv', sep='\t', index=None)

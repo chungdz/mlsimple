@@ -37,10 +37,14 @@ python train.py --dpath=/data/yunfanhu/samples \
                     --save_path=cps_noid
 # small train
 python train_rand.py --dpath=/data/yunfanhu/samples \
+                    --batch_size=512 \
                     --filep=train_5M.tsv \
                     --vfilep=valid_1M.tsv \
-                    --epoch=10 \
+                    --epoch=3 \
                     --save_path=cps_small
 
 
-
+# train lightgbm for importance
+python train_catboost.py --filep=train_5M.tsv \
+                    --vfilep=valid_1M.tsv
+               

@@ -73,6 +73,25 @@ class NNConfig():
                 "Feature_7240_RTImpressions_add1thenlogthenmultiplyby1000_5",
                 "Feature_7240_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5"
                 ]
+        self.flist_0 = ["Feature_1_garbage1_none" 
+                        ,"Feature_163_garbage1_none_5"
+                        ,"Feature_1194_garbage1_none_5"
+                        ,"Feature_1_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5"
+                        ,"Feature_7276_garbage1_none_5"
+                        ,"Feature_66_garbage1_none_5"
+                        ,"Feature_181_garbage1_none"
+                        ,"Feature_1631_garbage1_none"
+                        ,"Feature_1628_garbage1_none"
+                        ,"Feature_1627_garbage1_none"
+                        ,"Feature_1576_garbage1_none"
+                        ,"Feature_1574_garbage1_none"
+                        ,"Feature_97_garbage1_none"
+                        ,"Feature_552_garbage1_none"
+                        ,"Feature_594_ExpectedClicks_add1thenlogthenmultiplyby1000"
+                        ,"Feature_755_garbage1_none"
+                        ,"Feature_66_garbage1_none"
+                        ,"Feature_594_garbage1_none"
+                        ]
         self.idlist = [
                     # "m:AdId", 
                     "m:OrderId", 

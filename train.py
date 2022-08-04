@@ -116,13 +116,13 @@ for i in trange(args.points, desc='generate bin number'):
     predr = cdf['preds'].mean()
     labelr = cdf['labels'].mean()
 
-    if predr < math.e ** -10000:
-        predr = -10000
+    if predr < math.e ** -100:
+        predr = -100
     else:
         predr = math.log(predr)
     
-    if labelr < math.e ** -10000:
-        labelr = -10000
+    if labelr < math.e ** -100:
+        labelr = -100
     else:
         labelr = math.log(labelr)
     
@@ -132,6 +132,6 @@ for i in trange(args.points, desc='generate bin number'):
 plt.xlabel('PredictedRate')
 plt.ylabel('TrueRate')
 plt.title('log-log scale')
-plt.scatter(predr, labelr)
+plt.scatter(plist, tlist)
 plt.savefig(os.path.join(args.save_path, 'Calibration.jpg'))
 

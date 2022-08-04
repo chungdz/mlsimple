@@ -4,7 +4,6 @@ import json
 import pandas as pd
 from nn_modules.mgtir import MGTIR
 from nn_modules.noid import NoID
-from nn_modules.mgtiremb import MGTIREmb
 from utils.train_util import set_seed
 from torch.utils.data import DataLoader
 from utils.ds import ClassificationTrainDS, collate_fn

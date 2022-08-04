@@ -5,7 +5,7 @@ from .fm import FM
 
 class MGTIR(nn.Module):
 
-    def __init__(self, cfg, usefm=False):
+    def __init__(self, cfg, usefm=True):
         super(MGTIR, self).__init__()
         
         self.hidden = cfg.hidden
@@ -24,8 +24,7 @@ class MGTIR(nn.Module):
             nn.ReLU()
         )
         self.seq3 = nn.Sequential(
-            nn.Linear(self.hidden + self.hidden // 2, 1),
-            nn.Sigmoid())
+            nn.Linear(self.hidden + self.hidden // 2, 1))
         
         selected = []
         for idname in cfg.idlist:
@@ -47,7 +46,7 @@ class MGTIR(nn.Module):
         logits = self.seq3(concated)
         if self.usefm:
             logits += self.fm(embt.reshape(-1, self.idlen, self.emb_size))
-        return logits
+        return torch.sigmoid(logits)
 
     def forward(self, finputs, idinputs, labels):
 

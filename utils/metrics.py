@@ -1,5 +1,7 @@
-from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
+from pydoc import cli
+from sklearn.metrics import accuracy_score, f1_score, roc_auc_score, auc, precision_recall_curve
 import numpy as np
+import math
 
 def mrr_score(y_true, y_score):
     """Computing mrr score metric.
@@ -98,8 +100,15 @@ def cal_metric(labels, preds, metrics):
 
 def compute_metrics(p):
     y_pred = p.predictions.flatten()
+    precision, recall, _ = precision_recall_curve(p.label_ids, y_pred)
+    ysize = p.label_ids.shape[0]
+    clickp = sum(p.label_ids) / ysize
+    yEntropy = -(clickp * math.log(clickp) + (1 - clickp) * math.log(1 - clickp))
+    llxy = sum([y_pred[i] if p.label_ids[i] == 1 else 1 - y_pred[i] for i in range(ysize)])
+
     return {
-        "AUC": roc_auc_score(p.label_ids, y_pred),
+        "ROC AUC": roc_auc_score(p.label_ids, y_pred),
         "MRR": mrr_score(p.label_ids, y_pred),
-        "nDCG": ndcg_score(p.label_ids, y_pred, k=y_pred.shape[0] // 10) 
+        "nDCG": ndcg_score(p.label_ids, y_pred, k=y_pred.shape[0] // 10),
+        "Precison-Recall AUC": auc(recall, precision)
     }

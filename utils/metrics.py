@@ -104,11 +104,12 @@ def compute_metrics(p):
     ysize = p.label_ids.shape[0]
     clickp = sum(p.label_ids) / ysize
     yEntropy = -(clickp * math.log(clickp) + (1 - clickp) * math.log(1 - clickp))
-    llxy = sum([y_pred[i] if p.label_ids[i] == 1 else 1 - y_pred[i] for i in range(ysize)])
+    llxy = sum([math.log(y_pred[i]) if p.label_ids[i] == 1 else math.log(1 - y_pred[i]) for i in range(ysize)])
 
     return {
         "ROC AUC": roc_auc_score(p.label_ids, y_pred),
         "MRR": mrr_score(p.label_ids, y_pred),
         "nDCG": ndcg_score(p.label_ids, y_pred, k=y_pred.shape[0] // 10),
-        "Precison-Recall AUC": auc(recall, precision)
+        "Precison-Recall AUC": auc(recall, precision),
+        "RIG": (llxy / ysize + yEntropy) / yEntropy
     }

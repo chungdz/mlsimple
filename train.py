@@ -32,7 +32,6 @@ parser.add_argument("--resume_checkpoint", action='store_true', help='''whether 
                             or load parameter saved before and continue training. For example, if start_epoch=/mnt/cifar/checkpoint-20, then model will load parameter 
                             in the path and continue the epoch of training after 20 steps''')
 parser.add_argument("--additionId", action='store_true', help='whether to add AdId and UserId')
-parser.add_argument("--has_emb", action='store_true', help='whether to add AdId and UserId')
 parser.add_argument("--filep", default="sample.tsv", type=str,
                         help="train file")
 parser.add_argument("--headp", default="header.tsv", type=str,
@@ -57,9 +56,7 @@ trainset = ClassificationTrainDS(cfg, headerp, trainp, args.chunk_size)
 validset = ClassificationTrainDS(cfg, headerp, validp, args.chunk_size // 4)
 
 print('load model')
-if args.has_emb:
-    model = MGTIREmb(cfg)
-elif args.with_id == 1:
+if args.with_id == 1:
     model = MGTIR(cfg)    
 else:
     model = NoID(cfg)

@@ -44,7 +44,7 @@ class MGTIR(nn.Module):
         concated = torch.cat([self.seq(finputs), self.seq2(embt)], dim=-1)
         logits = self.l3(concated)
         if self.usefm:
-            logits = torch.relu(logits) + self.fm(embt.reshape(-1, self.idlen, self.emb_size))
+            logits = logits + self.fm(embt.reshape(-1, self.idlen, self.emb_size))
         return torch.sigmoid(logits)
 
     def forward(self, finputs, idinputs, labels):

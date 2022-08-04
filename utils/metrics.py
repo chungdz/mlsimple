@@ -104,7 +104,22 @@ def compute_metrics(p):
     ysize = p.label_ids.shape[0]
     clickp = sum(p.label_ids) / ysize
     yEntropy = -(clickp * math.log(clickp) + (1 - clickp) * math.log(1 - clickp))
-    llxy = sum([math.log(y_pred[i]) if p.label_ids[i] == 1 else math.log(1 - y_pred[i]) for i in range(ysize)])
+
+    lsum = []
+    # implement the same as pytorch: log output show be greater or equal than -100
+    for i in range(ysize):
+        if p.label_ids[i] == 1:
+            if y_pred[i] == 0:
+                lsum.append(-100)
+            else:
+                max(lsum.append(math.log(y_pred[i])), -100)
+        else:
+            if y_pred[i] == 1:
+                lsum.append(-100)
+            else:
+                max(lsum.append(math.log(1 - y_pred[i])), -100)
+
+    llxy = sum(lsum)
 
     return {
         "ROC AUC": roc_auc_score(p.label_ids, y_pred),

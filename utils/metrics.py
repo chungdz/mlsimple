@@ -109,15 +109,14 @@ def compute_metrics(p):
     # implement the same as pytorch: log output show be greater or equal than -100
     for i in range(ysize):
         if p.label_ids[i] == 1:
-            if y_pred[i] == 0:
-                lsum.append(-100)
-            else:
-                max(lsum.append(math.log(y_pred[i])), -100)
+            cur_num = y_pred[i]
         else:
-            if y_pred[i] == 1:
-                lsum.append(-100)
-            else:
-                max(lsum.append(math.log(1 - y_pred[i])), -100)
+            cur_num = 1 - y_pred[i]
+
+        if cur_num < math.e ** -100:
+            lsum.append(-100)
+        else:
+            lsum.append(math.log(y_pred[i]))
 
     llxy = sum(lsum)
 

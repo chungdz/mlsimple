@@ -4,7 +4,6 @@ import json
 import pandas as pd
 from nn_modules.mgtir import MGTIR
 from nn_modules.noid import NoID
-from nn_modules.mgtiremb import MGTIREmb
 from utils.train_util import set_seed
 from torch.utils.data import DataLoader
 from utils.ds import ClassificationTrainDS, collate_fn
@@ -76,7 +75,7 @@ training_args = TrainingArguments(
     evaluation_strategy="steps",
     save_strategy="steps",
     logging_strategy="steps",
-    metric_for_best_model="eval_AUC",
+    metric_for_best_model="eval_ROC AUC",
     logging_steps=args.save_steps,
     eval_steps=args.save_steps,
     save_steps=args.save_steps,

@@ -1,16 +1,20 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from .fm import FM
 
 class MGTIR(nn.Module):
 
-    def __init__(self, cfg):
+    def __init__(self, cfg, usefm=False):
         super(MGTIR, self).__init__()
         
         self.hidden = cfg.hidden
         self.idlen = len(cfg.idlist)
         self.flen = len(cfg.flist)
         self.wd = cfg.weight_decay
+        self.usefm = usefm
+        self.emb_size = cfg.emb_size
+
         self.seq = nn.Sequential(
             nn.Linear(self.flen, self.hidden),
             nn.ReLU()
@@ -29,13 +33,21 @@ class MGTIR(nn.Module):
             selected.append(cfg.meta['dicts'][dindex])
         self.embLayer = nn.ModuleList([nn.Embedding(len(d), cfg.emb_size) for d in selected])
         
+        if usefm:
+            self.fm = FM()
+        
     def predict(self, finputs, idinputs):
+
         embs = []
         for i in range(self.idlen):
             embs.append(self.embLayer[i](idinputs[:, i]))
         embt = torch.cat(embs, dim=-1)
+
         concated = torch.cat([self.seq(finputs), self.seq2(embt)], dim=-1)
-        return self.seq3(concated)
+        logits = self.seq3(concated)
+        if self.usefm:
+            logits += self.fm(embt.reshape(-1, self.idlen, self.emb_size))
+        return logits
 
     def forward(self, finputs, idinputs, labels):
 

@@ -1,4 +1,4 @@
-from tqdm import tqdm
+from tqdm import tqdm, trange
 import numpy as np
 import json
 import pandas as pd
@@ -16,6 +16,8 @@ import gc
 import torch.nn.functional as F
 from datasets import load_dataset, load_metric
 from transformers import Trainer, TrainingArguments
+import math
+import matplotlib.pyplot as plt
 
 set_seed(7)
 
@@ -37,6 +39,8 @@ parser.add_argument("--headp", default="header.tsv", type=str,
 parser.add_argument("--vfilep", default="valid.tsv", type=str,
                         help="valid file")
 parser.add_argument("--with_id", default=1, type=int,
+                        help="default has id")
+parser.add_argument("--points", default=5000, type=int,
                         help="default has id")
 args = parser.parse_args()
 
@@ -93,5 +97,33 @@ print('start training')
 trainer.train(resume_from_checkpoint=args.resume_checkpoint)
 print('predict and plot')
 res, label_ids, metrics = trainer.predict(validset)
-df = pd.DataFrame({'preds': res.flatten(), 'labels': label_ids})
+df = pd.DataFrame({'preds': res.flatten(), 'labels': label_ids}).sort_values('preds', axis=0)
+bin_size = math.ceil(df.shape[0] / args.points)
 
+plist = []
+tlist = []
+for i in trange(args.points, desc='generate bin number'):
+    start = i * bin_size
+    end = (i + 1) * bin_size
+    cdf = df[start: end]
+    predr = cdf['preds'].mean()
+    labelr = cdf['labels'].mean()
+
+    if predr < math.e ** -10000:
+        predr = -10000
+    else:
+        predr = math.log(predr)
+    
+    if labelr < math.e ** -10000:
+        labelr = -10000
+    else:
+        labelr = math.log(labelr)
+    
+    plist.append(predr)
+    tlist.append(labelr)
+
+plt.xlabel('PredictedRate')
+plt.ylabel('TrueRate')
+plt.title('log-log scale')
+plt.scatter(predr, labelr)
+plt.savefig(os.path.join(args.save_path, 'Calibration.jpg'))

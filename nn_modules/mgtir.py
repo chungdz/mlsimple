@@ -12,7 +12,6 @@ class MGTIR(nn.Module):
         self.idlen = len(cfg.idlist)
         self.flen = len(cfg.flist)
         self.wd = cfg.weight_decay
-        self.usefm = usefm
         self.emb_size = cfg.emb_size
 
         self.seq = nn.Sequential(
@@ -32,9 +31,6 @@ class MGTIR(nn.Module):
             dindex = cfg.meta['all_ids'].index(idname)
             selected.append(cfg.meta['dicts'][dindex])
         self.embLayer = nn.ModuleList([nn.Embedding(len(d), cfg.emb_size) for d in selected])
-        
-        if usefm:
-            self.fm = FM()
         
     def predict(self, finputs, idinputs):
 

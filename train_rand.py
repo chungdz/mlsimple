@@ -22,10 +22,10 @@ set_seed(7)
 parser = argparse.ArgumentParser()
 parser.add_argument("--dpath", default="data", type=str,
                         help="root path of all data")
-parser.add_argument("--epoch", default=10, type=int, help="training epoch")
-parser.add_argument("--batch_size", default=512, type=int, help="training batch size used in Pytorch DataLoader")
+parser.add_argument("--epoch", default=3, type=int, help="training epoch")
+parser.add_argument("--batch_size", default=32, type=int, help="training batch size used in Pytorch DataLoader")
 parser.add_argument("--lr", default=0.001, type=float, help="Learning rate")
-parser.add_argument("--save_path", default='cps', type=str, help="path to save training model parameters")
+parser.add_argument("--save_path", default='cps_samples', type=str, help="path to save training model parameters")
 parser.add_argument("--resume_checkpoint", action='store_true', help='''whether to start training from scratch 
                             or load parameter saved before and continue training. For example, if start_epoch=/mnt/cifar/checkpoint-20, then model will load parameter 
                             in the path and continue the epoch of training after 20 steps''')
@@ -38,8 +38,6 @@ parser.add_argument("--vfilep", default="valid.tsv", type=str,
                         help="valid file")
 parser.add_argument("--with_id", default=1, type=int,
                         help="default has id")
-parser.add_argument("--tfilep", default=None, type=str,
-                        help="test file after train")
 args = parser.parse_args()
 
 print('load config')
@@ -93,8 +91,7 @@ trainer = Trainer(model=model,
 
 print('start training')
 trainer.train(resume_from_checkpoint=args.resume_checkpoint)
+print('predict and plot')
+res, label_ids, metrics = trainer.predict(validset)
+df = pd.DataFrame({'preds': res.flatten(), 'labels': label_ids})
 
-if not args.tfilep is None:
-    testp = os.path.join(args.dpath, args.tfilep)
-    testset = ClassificationTrainDS(cfg, headerp, testp, args.chunk_size // 4)
-    trainer.evaluate(testset)

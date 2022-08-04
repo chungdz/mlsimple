@@ -32,8 +32,9 @@ id_feature = ["m:AdId", "m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:Client
 
 ilen = len(id_feature)
 flen = len(flist)
-idxdicts = idxdicts = [{} for _ in range(ilen)]
-idxrecord = [0] * ilen
+idxdicts = [{"<UKN>": 0} for _ in range(ilen)]
+idxfreq = [{"<UKN>": 0} for _ in range(ilen)]
+idxrecord = [1] * ilen
 min_list = []
 max_list = []
 
@@ -65,6 +66,9 @@ def get_meta_info(chunk):
             if v not in idxdicts[j]:
                 idxdicts[j][v] = idxrecord[j]
                 idxrecord[j] += 1
+                idxfreq[j][v] = 1
+            else:
+                idxfreq[j][v] += 1
 
 total_row = 0
 positive_row = 0
@@ -76,6 +80,8 @@ for chunk in tqdm(df):
 print('train', total_row, positive_row, total_row - positive_row, 
                         (total_row - positive_row) / positive_row)
 
+total_ob = total_row
+
 total_row = 0
 positive_row = 0
 for chunk in tqdm(vdf):
@@ -85,6 +91,8 @@ for chunk in tqdm(vdf):
 
 print('validation', total_row, positive_row, total_row - positive_row, 
                         (total_row - positive_row) / positive_row)
+
+total_ob += total_row
 
 to_minus = []
 to_div = []
@@ -101,7 +109,9 @@ infodict = {
     "to_minus": to_minus,
     "to_div": to_div,
     "all_ids": id_feature,
-    "dicts": idxdicts
+    "dicts": idxdicts,
+    "freq": idxfreq,
+    "total_count": total_ob
 }
 
 json.dump(infodict, open(outp, "w"))

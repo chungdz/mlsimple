@@ -42,7 +42,14 @@ python train_rand.py --dpath=/data/yunfanhu/samples \
                     --vfilep=valid_1M.tsv \
                     --epoch=5 \
                     --save_path=cps_small
-
+# train on little sample
+python -m preprocess.get_meta
+python train_rand.py --dpath=data \
+                    --batch_size=32 \
+                    --filep=sample.tsv \
+                    --vfilep=valid.tsv \
+                    --epoch=2 \
+                    --save_path=cps_samples
 
 # train lightgbm for importance
 python train_catboost.py  --dpath=/data/yunfanhu/samples \

@@ -23,8 +23,7 @@ class MGTIR(nn.Module):
             nn.Linear(self.idlen * cfg.emb_size, self.hidden // 2),
             nn.ReLU()
         )
-        self.seq3 = nn.Sequential(
-            nn.Linear(self.hidden + self.hidden // 2, 1))
+        self.l3 = nn.Linear(self.hidden + self.hidden // 2, 1)
         
         selected = []
         for idname in cfg.idlist:
@@ -43,9 +42,9 @@ class MGTIR(nn.Module):
         embt = torch.cat(embs, dim=-1)
 
         concated = torch.cat([self.seq(finputs), self.seq2(embt)], dim=-1)
-        logits = self.seq3(concated)
+        logits = self.l3(concated)
         if self.usefm:
-            logits += self.fm(embt.reshape(-1, self.idlen, self.emb_size))
+            logits = torch.relu(logits) + self.fm(embt.reshape(-1, self.idlen, self.emb_size))
         return torch.sigmoid(logits)
 
     def forward(self, finputs, idinputs, labels):

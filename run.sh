@@ -18,6 +18,14 @@ python train.py --dpath=/data/yunfanhu/samples \
                     --max_steps=800000 \
                     --save_path=cps \
                     --save_steps=80000
+# 20
+python train.py --dpath=/data/yunfanhu/samples_20 \
+                    --batch_size=8 \
+                    --filep=train.tsv \
+                    --vfilep=valid_3M.tsv \
+                    --max_steps=4000000 \
+                    --save_path=cps \
+                    --save_steps=200000
 
 python train.py --dpath=/data/yunfanhu/samples \
                     --batch_size=8 \

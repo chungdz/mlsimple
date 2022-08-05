@@ -21,7 +21,7 @@ args = parser.parse_args()
 filep = os.path.join(args.dpath, args.filep)
 validp = os.path.join(args.dpath, args.vfilep)
 headp = os.path.join(args.dpath, args.headp)
-outp = os.path.join(args.dpath, "meta_info.json")
+outp = os.path.join(args.dpath, "freq_info.json")
 print('load data')
 header = pd.read_csv(headp, sep='\t')
 df = pd.read_csv(filep, sep='\t', names=header.columns, iterator=True, chunksize=args.chunk_size)
@@ -32,9 +32,7 @@ id_feature = ["m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:TagId", "m:Publi
 
 ilen = len(id_feature)
 flen = len(flist)
-idxdicts = [{"<UKN>": 0} for _ in range(ilen)]
-idxfreq = [{"<UKN>": 0} for _ in range(ilen)]
-idxrecord = [1] * ilen
+idxfreq = []
 min_list = []
 max_list = []
 
@@ -63,9 +61,7 @@ def get_meta_info(chunk):
     for j in range(ilen):
         idname = id_feature[j]
         for v in chunk[idname]:
-            if v not in idxdicts[j]:
-                idxdicts[j][v] = idxrecord[j]
-                idxrecord[j] += 1
+            if v not in idxfreq[j]:
                 idxfreq[j][v] = 1
             else:
                 idxfreq[j][v] += 1
@@ -109,7 +105,6 @@ infodict = {
     "to_minus": to_minus,
     "to_div": to_div,
     "all_ids": id_feature,
-    "dicts": idxdicts,
     "freq": idxfreq,
     "total_count": total_ob
 }

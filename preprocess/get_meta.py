@@ -5,6 +5,7 @@ from tqdm import tqdm
 import json
 import argparse
 from utils.config import NNConfig
+import collections
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dpath", default="data", type=str,
@@ -32,7 +33,7 @@ id_feature = ["m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:TagId", "m:Publi
 
 ilen = len(id_feature)
 flen = len(flist)
-idxfreq = []
+idxfreq = [collections.defaultdict(int) for _ in range(ilen)]
 min_list = []
 max_list = []
 
@@ -61,10 +62,7 @@ def get_meta_info(chunk):
     for j in range(ilen):
         idname = id_feature[j]
         for v in chunk[idname]:
-            if v not in idxfreq[j]:
-                idxfreq[j][v] = 1
-            else:
-                idxfreq[j][v] += 1
+            idxfreq[j][v] += 1
 
 total_row = 0
 positive_row = 0

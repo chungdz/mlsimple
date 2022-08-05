@@ -74,6 +74,10 @@ for chunk in tqdm(df):
 print('train', total_row, positive_row, total_row - positive_row, 
                         (total_row - positive_row) / positive_row)
 
+for i in range(flen):
+    if min_list[i] == max_list[i]:
+        print(flist[i])
+
 total_ob = total_row
 
 total_row = 0
@@ -92,8 +96,6 @@ to_minus = []
 to_div = []
 for i in range(flen):
     if min_list[i] == max_list[i] or (min_list[i] == 0 and max_list[i] == 1):
-        if min_list[i] == max_list[i]:
-            print(flist[i])
         to_minus.append(0)
         to_div.append(1)
     else:

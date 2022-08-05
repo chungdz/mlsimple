@@ -18,6 +18,7 @@ from datasets import load_dataset, load_metric
 from transformers import Trainer, TrainingArguments
 import math
 import matplotlib.pyplot as plt
+from sklearn.calibration import calibration_curve
 
 set_seed(7)
 
@@ -40,7 +41,7 @@ parser.add_argument("--vfilep", default="valid.tsv", type=str,
                         help="valid file")
 parser.add_argument("--with_id", default=1, type=int,
                         help="default has id")
-parser.add_argument("--points", default=5000, type=int,
+parser.add_argument("--points", default=100, type=int,
                         help="default has id")
 args = parser.parse_args()
 
@@ -97,17 +98,11 @@ print('start training')
 trainer.train(resume_from_checkpoint=args.resume_checkpoint)
 print('predict and plot')
 res, label_ids, metrics = trainer.predict(validset)
-df = pd.DataFrame({'preds': res.flatten(), 'labels': label_ids}).sort_values('preds', axis=0)
-bin_size = math.ceil(df.shape[0] / args.points)
+ctrue, cpred = calibration_curve(label_ids, res.flatten(), n_bins=args.points, strategy="quantile")
 
 plist = []
 tlist = []
-for i in trange(args.points, desc='generate bin number'):
-    start = i * bin_size
-    end = (i + 1) * bin_size
-    cdf = df[start: end]
-    predr = cdf['preds'].mean()
-    labelr = cdf['labels'].mean()
+for predr, labelr in zip(cpred, ctrue):
 
     if predr < math.e ** -100:
         predr = -100

@@ -23,25 +23,25 @@ from sklearn.calibration import calibration_curve
 set_seed(7)
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--dpath", default="data", type=str,
+parser.add_argument("--dpath", default="/data/yunfanhu/samples", type=str,
                         help="root path of all data")
-parser.add_argument("--epoch", default=3, type=int, help="training epoch")
-parser.add_argument("--batch_size", default=32, type=int, help="training batch size used in Pytorch DataLoader")
+parser.add_argument("--epoch", default=1, type=int, help="training epoch")
+parser.add_argument("--batch_size", default=1024, type=int, help="training batch size used in Pytorch DataLoader")
 parser.add_argument("--lr", default=0.001, type=float, help="Learning rate")
-parser.add_argument("--save_path", default='cps_samples', type=str, help="path to save training model parameters")
+parser.add_argument("--save_path", default='cps_small', type=str, help="path to save training model parameters")
 parser.add_argument("--resume_checkpoint", action='store_true', help='''whether to start training from scratch 
                             or load parameter saved before and continue training. For example, if start_epoch=/mnt/cifar/checkpoint-20, then model will load parameter 
                             in the path and continue the epoch of training after 20 steps''')
 parser.add_argument("--additionId", action='store_true', help='whether to add AdId and UserId')
-parser.add_argument("--filep", default="sample.tsv", type=str,
+parser.add_argument("--filep", default="train_5M.tsv", type=str,
                         help="train file")
 parser.add_argument("--headp", default="header.tsv", type=str,
                         help="train file")
-parser.add_argument("--vfilep", default="valid.tsv", type=str,
+parser.add_argument("--vfilep", default="valid_1M.tsv", type=str,
                         help="valid file")
 parser.add_argument("--with_id", default=1, type=int,
                         help="default has id")
-parser.add_argument("--points", default=100, type=int,
+parser.add_argument("--points", default=500, type=int,
                         help="default has id")
 args = parser.parse_args()
 
@@ -66,6 +66,7 @@ print('load trainer')
 training_args = TrainingArguments(
     output_dir=args.save_path,
     per_device_train_batch_size=args.batch_size,
+    per_device_eval_batch_size=args.batch_size,
     lr_scheduler_type='linear',
     optim="adamw_torch",
     dataloader_num_workers=8,
@@ -98,27 +99,11 @@ print('start training')
 trainer.train(resume_from_checkpoint=args.resume_checkpoint)
 print('predict and plot')
 res, label_ids, metrics = trainer.predict(validset)
-ctrue, cpred = calibration_curve(label_ids, res.flatten(), n_bins=args.points, strategy="quantile")
-
-plist = []
-tlist = []
-for predr, labelr in zip(cpred, ctrue):
-
-    if predr < math.e ** -100:
-        predr = -100
-    else:
-        predr = math.log(predr)
-    
-    if labelr < math.e ** -100:
-        labelr = -100
-    else:
-        labelr = math.log(labelr)
-    
-    plist.append(predr)
-    tlist.append(labelr)
-
+ctrue, cpred = calibration_curve(label_ids, res.flatten(), n_bins=args.points, strategy="uniform", pos_label=1)
 plt.xlabel('PredictedRate')
 plt.ylabel('TrueRate')
 plt.title('log-log scale')
-plt.scatter(plist, tlist)
+plt.xscale('log')
+plt.yscale('log')
+plt.scatter(ctrue, cpred)
 plt.savefig(os.path.join(args.save_path, 'Calibration.jpg'))

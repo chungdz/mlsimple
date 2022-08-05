@@ -106,27 +106,11 @@ print('start training')
 trainer.train(resume_from_checkpoint=args.resume_checkpoint)
 print('predict and plot')
 res, label_ids, metrics = trainer.predict(validset)
-ctrue, cpred = calibration_curve(label_ids, res.flatten(), n_bins=100, strategy="quantile")
-
-plist = []
-tlist = []
-for predr, labelr in zip(cpred, ctrue):
-
-    if predr < math.e ** -100:
-        predr = -100
-    else:
-        predr = math.log(predr)
-    
-    if labelr < math.e ** -100:
-        labelr = -100
-    else:
-        labelr = math.log(labelr)
-    
-    plist.append(predr)
-    tlist.append(labelr)
-
+ctrue, cpred = calibration_curve(label_ids, res.flatten(), n_bins=args.points, strategy="uniform", pos_label=1)
 plt.xlabel('PredictedRate')
 plt.ylabel('TrueRate')
 plt.title('log-log scale')
-plt.scatter(plist, tlist)
+plt.xscale('log')
+plt.yscale('log')
+plt.scatter(ctrue, cpred)
 plt.savefig(os.path.join(args.save_path, 'Calibration.jpg'))

@@ -70,6 +70,7 @@ print('load trainer')
 training_args = TrainingArguments(
     output_dir=args.save_path,
     per_device_train_batch_size=args.batch_size,
+    per_device_eval_batch_size=args.batch_size,
     lr_scheduler_type='linear',
     optim="adamw_torch",
     dataloader_num_workers=1,

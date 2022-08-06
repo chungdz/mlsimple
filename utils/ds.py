@@ -7,11 +7,12 @@ import pandas as pd
 import random
 
 class ClassificationTrainDS(IterableDataset):
-    def __init__(self, cfg, headerp, filep, chunk_size):
+    def __init__(self, cfg, headerp, filep, chunk_size, isTrain=True):
         super(ClassificationTrainDS).__init__()
         
         self.header = pd.read_csv(headerp, sep='\t')
         self.filep = filep
+        self.isTrain = isTrain
         
         dicts = []
         to_sub = []
@@ -55,7 +56,10 @@ class ClassificationTrainDS(IterableDataset):
                 cur_chunk[fname] = (cur_chunk[fname] - self.to_sub[findex]) / self.to_div[findex]
                 
             for dindex, idname in enumerate(self.idlist):
-                cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex].get(str(x), 0) if random.random() > 0.006 else 0)
+                if self.isTrain:
+                    cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex].get(str(x), 0) if random.random() > 0.006 else 0)
+                else:
+                    cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex].get(str(x), 0))
                 
             idinputs = cur_chunk[self.idlist].values
             targets = cur_chunk["m:Click"].values

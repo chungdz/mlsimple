@@ -53,8 +53,8 @@ headerp = os.path.join(args.dpath, args.headp)
 trainp = os.path.join(args.dpath, args.filep)
 validp = os.path.join(args.dpath, args.vfilep)
 print('load dataset')
-trainset = ClassificationTrainDS(cfg, headerp, trainp)
-validset = ClassificationTrainDS(cfg, headerp, validp)
+trainset = ClassificationTrainDS(cfg, headerp, trainp, isTrain=True)
+validset = ClassificationTrainDS(cfg, headerp, validp, isTrain=False)
 
 print('load model')
 if args.with_id == 1:

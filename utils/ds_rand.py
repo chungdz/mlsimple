@@ -1,3 +1,4 @@
+from multidict import istr
 from torch.utils.data.dataset import Dataset
 import torch
 import os
@@ -7,7 +8,7 @@ import random
 import pandas as pd
 
 class ClassificationTrainDS(Dataset):
-    def __init__(self, cfg, headerp, filep):
+    def __init__(self, cfg, headerp, filep, isTrain=True):
         self.header = pd.read_csv(headerp, sep='\t')
         cur_chunk = pd.read_csv(filep, sep='\t', names=self.header.columns)
         
@@ -34,7 +35,10 @@ class ClassificationTrainDS(Dataset):
             cur_chunk[fname] = (cur_chunk[fname] - self.to_sub[findex]) / self.to_div[findex]
                 
         for dindex, idname in enumerate(self.idlist):
-            cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex].get(str(x), 0) if random.random() > 0.006 else 0)
+            if isTrain:
+                cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex].get(str(x), 0) if random.random() > 0.006 else 0)
+            else:
+                cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex].get(str(x), 0))
 
         self.finputs = cur_chunk[self.flist].values      
         self.idinputs = cur_chunk[self.idlist].values

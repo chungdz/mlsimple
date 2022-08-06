@@ -10,6 +10,8 @@ import collections
 parser = argparse.ArgumentParser()
 parser.add_argument("--dpath", default="data", type=str,
                         help="root path of all data")
+parser.add_argument("--drop_num", default=10, type=int,
+                        help="threshold to drop")
 args = parser.parse_args()
 
 filep = os.path.join(args.dpath, "freq_info.json")
@@ -17,7 +19,7 @@ outp = os.path.join(args.dpath, "meta_info.json")
 print('load data')
 cdict = json.load(open(filep, 'r'))
 
-def getIndexDict(curi, masked=10):
+def getIndexDict(curi, masked=args.drop_num):
     curd = cdict['freq'][curi]
     curname = cdict['all_ids'][curi]
     print(curname, len(curd))

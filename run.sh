@@ -62,5 +62,6 @@ python -m preprocess.get_meta --dpath=/data/yunfanhu/samples_20 \
                             --vfilep=valid.tsv \
                             --chunk_size=50000
 
-python -m preprocess.process_meta --dpath=/data/yunfanhu/samples_20
+python -m preprocess.process_meta --dpath=/data/yunfanhu/samples_20 \
+                                    --drop_num=20
 

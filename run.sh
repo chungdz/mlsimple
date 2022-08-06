@@ -56,4 +56,11 @@ python train_rand.py --dpath=/data/yunfanhu/samples \
 python train_catboost.py  --dpath=/data/yunfanhu/samples \
                     --filep=train_5M.tsv \
                     --vfilep=valid_1M.tsv
-               
+# process bigger files            
+python -m preprocess.get_meta --dpath=/data/yunfanhu/samples_20 \
+                            --filep=train.tsv \
+                            --vfilep=valid.tsv \
+                            --chunk_size=50000
+
+python -m preprocess.process_meta --dpath=/data/yunfanhu/samples_20
+

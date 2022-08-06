@@ -3,6 +3,7 @@ import torch
 import os
 import pandas as pd
 import numpy as np
+import random
 import pandas as pd
 
 class ClassificationTrainDS(Dataset):
@@ -33,7 +34,7 @@ class ClassificationTrainDS(Dataset):
             cur_chunk[fname] = (cur_chunk[fname] - self.to_sub[findex]) / self.to_div[findex]
                 
         for dindex, idname in enumerate(self.idlist):
-            cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex][str(x)])
+            cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex].get(str(x), 0) if random.random() > 0.006 else 0)
 
         self.finputs = cur_chunk[self.flist].values      
         self.idinputs = cur_chunk[self.idlist].values

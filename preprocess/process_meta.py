@@ -43,4 +43,4 @@ metadict = {
     "total_count": cdict["total_count"]
 }
 
-json.dump(metadict, outp)
+json.dump(metadict, open(outp, 'w'))

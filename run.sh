@@ -25,7 +25,7 @@ python train.py --dpath=/data/yunfanhu/samples \
                     --filep=train.tsv \
                     --vfilep=valid.tsv \
                     --max_steps=70000 \
-                    --save_path=cps \
+                    --save_path=cps_small \
                     --save_steps=10000
 # 20
 python train.py --dpath=/data/yunfanhu/samples_20 \

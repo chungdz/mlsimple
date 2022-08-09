@@ -18,6 +18,15 @@ python train.py --dpath=/data/yunfanhu/samples \
                     --max_steps=800000 \
                     --save_path=cps \
                     --save_steps=80000
+
+python train.py --dpath=/data/yunfanhu/samples \
+                    --batch_size=2 \
+                    --chunk_size=2048 \
+                    --filep=train.tsv \
+                    --vfilep=valid.tsv \
+                    --max_steps=70000 \
+                    --save_path=cps \
+                    --save_steps=10000
 # 20
 python train.py --dpath=/data/yunfanhu/samples_20 \
                     --batch_size=8 \
@@ -26,6 +35,15 @@ python train.py --dpath=/data/yunfanhu/samples_20 \
                     --max_steps=4000000 \
                     --save_path=cps \
                     --save_steps=200000
+
+python train.py --dpath=/data/yunfanhu/samples_20 \
+                    --batch_size=2 \
+                    --chunk_size=2048 \
+                    --filep=train.tsv \
+                    --vfilep=valid.tsv \
+                    --max_steps=100000 \
+                    --save_path=cps \
+                    --save_steps=20000
 
 python train.py --dpath=/data/yunfanhu/samples \
                     --batch_size=8 \
@@ -63,5 +81,5 @@ python -m preprocess.get_meta --dpath=/data/yunfanhu/samples_20 \
                             --chunk_size=50000
 
 python -m preprocess.process_meta --dpath=/data/yunfanhu/samples_20 \
-                                    --drop_num=20
+                                    --drop_num=10
 

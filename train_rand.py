@@ -43,6 +43,8 @@ parser.add_argument("--with_id", default=1, type=int,
                         help="default has id")
 parser.add_argument("--points", default=500, type=int,
                         help="default has id")
+parser.add_argument("--plots", default="plots/cali.jpg", type=str,
+                        help="picture file")
 args = parser.parse_args()
 
 print('load config')
@@ -100,10 +102,14 @@ trainer.train(resume_from_checkpoint=args.resume_checkpoint)
 print('predict and plot')
 res, label_ids, metrics = trainer.predict(validset)
 ctrue, cpred = calibration_curve(label_ids, res.flatten(), n_bins=args.points, strategy="uniform", pos_label=1)
+df = pd.DataFrame({'labels': ctrue, 'predictions': cpred})
+df.to_csv(os.path.join(args.dpath, 'res.csv'), index=None)
+
 plt.xlabel('PredictedRate')
 plt.ylabel('TrueRate')
 plt.title('log-log scale')
 plt.xscale('log')
 plt.yscale('log')
-plt.scatter(cpred, ctrue)
-plt.savefig(os.path.join(args.save_path, 'Calibration.jpg'))
+plt.axis('equal')
+plt.scatter(cpred, ctrue, s=1)
+plt.savefig(args.plots)

@@ -103,7 +103,7 @@ print('predict and plot')
 res, label_ids, metrics = trainer.predict(validset)
 ctrue, cpred = calibration_curve(label_ids, res.flatten(), n_bins=args.points, strategy="uniform", pos_label=1)
 df = pd.DataFrame({'labels': ctrue, 'predictions': cpred})
-df.to_csv(os.path.join(args.dpath, 'res.csv'), index=None)
+df.to_csv(os.path.join(args.save_path, 'res.csv'), index=None)
 
 plt.xlabel('PredictedRate')
 plt.ylabel('TrueRate')

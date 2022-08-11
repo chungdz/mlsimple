@@ -48,7 +48,10 @@ python train_rand.py --dpath=/data/yunfanhu/samples \
                     --vfilep=valid_1M.tsv \
                     --epoch=5 \
                     --save_path=cps_small
-
+# build plot
+python -m utils.plot_two_cali --spath=plots/two.jpg \
+                                --m0=cps_samples/res.csv \
+                                --m1=cps_small/res.csv
 
 # train lightgbm for importance
 python train_catboost.py  --dpath=/data/yunfanhu/samples \

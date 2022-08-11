@@ -23,31 +23,31 @@ from sklearn.calibration import calibration_curve
 set_seed(7)
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--dpath", default="data", type=str,
+parser.add_argument("--dpath", default="/data/yunfanhu/samples", type=str,
                         help="root path of all data")
-parser.add_argument("--max_steps", default=300, type=int, help="training total steps")
-parser.add_argument("--save_steps", default=100, type=int, help="training save steps")
-parser.add_argument("--batch_size", default=8, type=int, help="training batch size used in Pytorch DataLoader")
-parser.add_argument("--chunk_size", default=32, type=int, help="chunk_size * batch_size * GPU = real_batch_size")
+parser.add_argument("--max_steps", default=305, type=int, help="training total steps")
+parser.add_argument("--save_steps", default=305, type=int, help="training save steps")
+parser.add_argument("--batch_size", default=2, type=int, help="training batch size used in Pytorch DataLoader")
+parser.add_argument("--chunk_size", default=2048, type=int, help="chunk_size * batch_size * GPU = real_batch_size")
 parser.add_argument("--lr", default=0.001, type=float, help="Learning rate")
-parser.add_argument("--save_path", default='cps', type=str, help="path to save training model parameters")
+parser.add_argument("--save_path", default='cps_samples', type=str, help="path to save training model parameters")
 parser.add_argument("--resume_checkpoint", action='store_true', help='''whether to start training from scratch 
                             or load parameter saved before and continue training. For example, if start_epoch=/mnt/cifar/checkpoint-20, then model will load parameter 
                             in the path and continue the epoch of training after 20 steps''')
 parser.add_argument("--additionId", action='store_true', help='whether to add AdId and UserId')
-parser.add_argument("--filep", default="sample.tsv", type=str,
+parser.add_argument("--filep", default="train_5M.tsv", type=str,
                         help="train file")
 parser.add_argument("--headp", default="header.tsv", type=str,
                         help="train file")
-parser.add_argument("--vfilep", default="valid.tsv", type=str,
+parser.add_argument("--vfilep", default="valid_1M.tsv", type=str,
                         help="valid file")
 parser.add_argument("--with_id", default=1, type=int,
                         help="default has id")
 parser.add_argument("--tfilep", default=None, type=str,
                         help="test file after train")
-parser.add_argument("--points", default=5000, type=int,
+parser.add_argument("--points", default=500, type=int,
                         help="default has id")
-parser.add_argument("--plots", default="plots/cali.jpg", type=str,
+parser.add_argument("--plots", default="plots/cali_train.jpg", type=str,
                         help="picture file")
 args = parser.parse_args()
 

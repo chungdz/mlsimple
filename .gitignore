@@ -14,5 +14,6 @@
 */scopes*/
 *.zip
 *.jpg
+checkPara*
 
 Class unify.ipynb

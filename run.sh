@@ -50,8 +50,8 @@ python train_rand.py --dpath=/data/yunfanhu/samples \
                     --save_path=cps_small
 # build plot
 python -m utils.plot_two_cali --spath=plots/two.jpg \
-                                --m0=cps_samples/res.csv \
-                                --m1=cps_small/res.csv
+                                --m0=cps_noid/res.csv \
+                                --m1=cps_20/res.csv
 
 # train lightgbm for importance
 python train_catboost.py  --dpath=/data/yunfanhu/samples \

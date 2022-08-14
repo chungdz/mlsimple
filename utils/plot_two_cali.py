@@ -37,7 +37,7 @@ plt.xscale('log')
 plt.yscale('log')
 plt.axis('equal')
 plt.scatter(cpred0, ctrue0, label='Baseline', s=1)
-plt.scatter(m1df['predictions'], m1df['labels'], label='M1', s=1)
+plt.scatter(ctrue1, cpred1, label='M1', s=1)
 plt.legend()
 plt.savefig(args.spath)
 

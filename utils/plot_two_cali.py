@@ -38,7 +38,7 @@ plt.yscale('log')
 plt.axis('equal')
 plt.scatter(cpred0, ctrue0, label='Baseline', s=1)
 plt.scatter(cpred1, ctrue1, label='M1', s=1)
-plt.plot([1e-4, 0], [1e-4, 0], alpha=0.7, color='blue')
+plt.plot([1e-4, 1], [1e-4, 1], alpha=0.5, color='blue')
 plt.legend()
 plt.savefig(args.spath)
 

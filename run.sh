@@ -30,6 +30,17 @@ python train.py --dpath=/data/yunfanhu/samples_20 \
                     --save_path=cps_20 \
                     --plots=plots/m1_20.jpg \
                     --save_steps=30000
+# downsample
+python train.py --dpath=/data/yunfanhu/downsamples_20 \
+                    --batch_size=2 \
+                    --chunk_size=2048 \
+                    --filep=train.tsv \
+                    --vfilep=valid_5M.tsv \
+                    --max_steps=300000 \
+                    --save_path=cps_downsample \
+                    --plots=plots/m1_d.jpg \
+                    --save_steps=30000
+
 # no id
 python train.py --dpath=/data/yunfanhu/samples_20 \
                     --batch_size=2 \
@@ -37,9 +48,9 @@ python train.py --dpath=/data/yunfanhu/samples_20 \
                     --filep=train.tsv \
                     --vfilep=valid_5M.tsv \
                     --max_steps=300000 \
-                    --save_path=cps_noid \
+                    --save_path=cps_noid_w1 \
                     --with_id=0 \
-                    --plots=plots/baseline.jpg \
+                    --plots=plots/baseline_w1.jpg \
                     --save_steps=30000
 # small train
 python train_rand.py --dpath=/data/yunfanhu/samples \
@@ -50,8 +61,12 @@ python train_rand.py --dpath=/data/yunfanhu/samples \
                     --save_path=cps_small
 # build plot
 python -m utils.plot_two_cali --spath=plots/two.jpg \
-                                --m0=cps_noid/res.csv \
-                                --m1=cps_20/res.csv
+                                --m0=cps_noid_w1/res.csv \
+                                --m1=cps2/res.csv
+
+python -m utils.plot_one_cali --spath=plots/one.jpg \
+                                --res=cps2/res.csv \
+                                --points=500
 
 # train lightgbm for importance
 python train_catboost.py  --dpath=/data/yunfanhu/samples \

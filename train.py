@@ -108,7 +108,7 @@ print('start training')
 trainer.train(resume_from_checkpoint=args.resume_checkpoint)
 print('predict and plot')
 res, label_ids, metrics = trainer.predict(validset)
-ctrue, cpred = calibration_curve(label_ids, res.flatten(), n_bins=args.points, strategy="uniform", pos_label=1)
+ctrue, cpred = calibration_curve(label_ids, res.flatten(), n_bins=args.points, strategy="quantile", pos_label=1)
 df = pd.DataFrame({'labels': label_ids, 'predictions': res.flatten()})
 df.to_csv(os.path.join(args.save_path, 'res.csv'), index=None)
 

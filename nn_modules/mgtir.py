@@ -13,20 +13,26 @@ class MGTIR(nn.Module):
         self.wd = cfg.weight_decay
         self.uaemb = cfg.uaemb
         self.seq = nn.Sequential(
-            nn.Linear(self.flen, self.hidden),
+            nn.Linear(self.flen + 1, self.hidden),
             nn.ReLU()
         )
         self.seq2 = nn.Sequential(
             nn.Linear(self.idlen * cfg.emb_size, self.hidden // 2),
             nn.ReLU()
         )
-        self.seq4 = nn.Sequential(
-            nn.Linear(self.uaemb * 2, self.hidden // 4),
+        self.seq3 = nn.Sequential(
+            nn.Linear(self.hidden + self.hidden // 2, 1),
+            nn.Sigmoid())
+        
+        self.ufc = nn.Sequential(
+            nn.Linear(self.uaemb, self.uaemb),
             nn.ReLU()
         )
-        self.seq3 = nn.Sequential(
-            nn.Linear(self.hidden + self.hidden // 2 + self.hidden // 4, 1),
-            nn.Sigmoid())
+        self.afc = nn.Sequential(
+            nn.Linear(self.uaemb, self.uaemb),
+            nn.ReLU()
+        )
+        self.cos = nn.CosineSimilarity(dim=-1)
         
         selected = []
         for idname in cfg.idlist:
@@ -57,9 +63,13 @@ class MGTIR(nn.Module):
         uemb = uemb * (1 - umask) + unull_emb * umask
         aemb = aemb * (1 - amask) + anull_emb * amask
 
-        uaemb = torch.cat([uemb, aemb], dim=-1)
+        uembd = self.ufc(uembd)
+        aembd = self.afc(aembd)
 
-        concated = torch.cat([self.seq(finputs[:, :-self.uaemb * 2]), self.seq2(embt), self.seq4(uaemb)], dim=-1)
+        score = self.cos(uembd, aembd).unsqueeze(-1)
+        finputs = torch.cat([finputs[:, :-self.uaemb * 2], score], dim=-1)
+
+        concated = torch.cat([self.seq(finputs), self.seq2(embt)], dim=-1)
         return self.seq3(concated)
 
     def forward(self, finputs, idinputs, masks, labels):

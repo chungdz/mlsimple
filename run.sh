@@ -37,7 +37,7 @@ python train.py --dpath=/data/yunfanhu/downsamples_20 \
                     --filep=train.tsv \
                     --vfilep=valid_5M.tsv \
                     --max_steps=300000 \
-                    --save_path=cps_downsample \
+                    --save_path=cps_d30 \
                     --plots=plots/m1_d.jpg \
                     --save_steps=30000
 
@@ -62,11 +62,14 @@ python train_rand.py --dpath=/data/yunfanhu/samples \
 # build plot
 python -m utils.plot_two_cali --spath=plots/two.jpg \
                                 --m0=cps_noid_w1/res.csv \
-                                --m1=cps2/res.csv
+                                --m1=cps2/res.csv \
+                                --points=500 \
+                                --quantile
 
 python -m utils.plot_one_cali --spath=plots/one.jpg \
                                 --res=cps2/res.csv \
-                                --points=500
+                                --points=500 \
+                                --quantile
 
 # train lightgbm for importance
 python train_catboost.py  --dpath=/data/yunfanhu/samples \

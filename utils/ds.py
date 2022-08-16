@@ -17,7 +17,9 @@ class ClassificationTrainDS(IterableDataset):
         dicts = []
         to_sub = []
         to_div = []
-        self.flist = cfg.flist
+        self.uemb = ['uge{}'.format(l) for l in range(32)]
+        self.aemb = ['age{}'.format(l) for l in range(32)]
+        self.flist = cfg.flist + self.uemb + self.aemb
         self.idlist = cfg.idlist
         
         for fname in self.flist:
@@ -33,12 +35,6 @@ class ClassificationTrainDS(IterableDataset):
         self.to_div = to_div
         self.dicts = dicts
         self.chunk_size = chunk_size
-
-        self.has_emb = cfg.has_emb
-        if cfg.has_emb:
-            self.uemb = [x for x in list(self.header.columns) if 'Uemb' in x]
-            self.aemb = [x for x in list(self.header.columns) if 'Aemb' in x]
-            
     
     def init_reader(self):
         self.dfiter = iter(pd.read_csv(self.filep, sep='\t', names=self.header.columns, iterator=True, chunksize=self.chunk_size))
@@ -61,13 +57,10 @@ class ClassificationTrainDS(IterableDataset):
                 else:
                     cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex].get(str(x), 0))
                 
+            finputs = cur_chunk[self.flist].values
             idinputs = cur_chunk[self.idlist].values
             targets = cur_chunk["m:Click"].values
-
-            if self.has_emb:
-                finputs = cur_chunk[self.flist + self.uemb + self.aemb].values
-            else:
-                finputs = cur_chunk[self.flist].values
+            masks = cur_chunk[["uge_null", "age_null"]].values
                 
             if not worker_info is None:  # single-process data loading, return the full iterator
                 assert(worker_info.num_workers == 1)
@@ -75,6 +68,7 @@ class ClassificationTrainDS(IterableDataset):
             yield {
                     "finputs": torch.FloatTensor(finputs),
                     "idinputs": torch.LongTensor(idinputs),
+                    "masks": torch.ByteTensor(masks),
                     'labels': torch.FloatTensor(targets)
             }
         
@@ -84,5 +78,6 @@ def collate_fn(batch):
     return {
         'finputs': torch.cat([x['finputs'] for x in batch], dim=0),
         "idinputs" : torch.cat([x['idinputs'] for x in batch], dim=0),
+        'masks': torch.cat([x['masks'] for x in batch], dim=0),
         'labels': torch.cat([x['labels'] for x in batch], dim=0)
     }

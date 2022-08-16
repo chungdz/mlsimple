@@ -64,12 +64,12 @@ python -m utils.plot_two_cali --spath=plots/two.jpg \
                                 --m0=cps_noid_w1/res.csv \
                                 --m1=cps2/res.csv \
                                 --points=500 \
-                                --quantile
+                                --sample=quantile
 
 python -m utils.plot_one_cali --spath=plots/one.jpg \
                                 --res=cps2/res.csv \
                                 --points=500 \
-                                --quantile
+                                --sample=quantile
 
 # train lightgbm for importance
 python train_catboost.py  --dpath=/data/yunfanhu/samples \

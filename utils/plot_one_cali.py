@@ -32,7 +32,7 @@ if not args.ns:
     plt.title('log-log scale ' + args.sample)
     plt.xscale('log')
     plt.yscale('log')
-    plt.plot([1e-4, 1], [1e-4, 1], alpha=0.3, color='yellow')
+    plt.plot([1e-5, 1], [1e-5, 1], alpha=0.3, color='yellow')
 else:
     plt.title('normal scale ' + args.sample)
     plt.plot([0, 1], [0, 1], alpha=0.3, color='yellow')

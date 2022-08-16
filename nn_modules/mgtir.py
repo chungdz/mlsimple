@@ -63,10 +63,10 @@ class MGTIR(nn.Module):
         uemb = uemb * (1 - umask) + unull_emb * umask
         aemb = aemb * (1 - amask) + anull_emb * amask
 
-        uembd = self.ufc(uembd)
-        aembd = self.afc(aembd)
+        uemb = self.ufc(uemb)
+        aemb = self.afc(aemb)
 
-        score = self.cos(uembd, aembd).unsqueeze(-1)
+        score = self.cos(uemb, aemb).unsqueeze(-1)
         finputs = torch.cat([finputs[:, :-self.uaemb * 2], score], dim=-1)
 
         concated = torch.cat([self.seq(finputs), self.seq2(embt)], dim=-1)

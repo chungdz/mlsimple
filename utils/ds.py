@@ -4,13 +4,15 @@ import os
 import pandas as pd
 import numpy as np
 import pandas as pd
+import random
 
 class ClassificationTrainDS(IterableDataset):
-    def __init__(self, cfg, headerp, filep, chunk_size):
+    def __init__(self, cfg, headerp, filep, chunk_size, isTrain=True):
         super(ClassificationTrainDS).__init__()
         
         self.header = pd.read_csv(headerp, sep='\t')
         self.filep = filep
+        self.isTrain = isTrain
         
         dicts = []
         to_sub = []
@@ -50,7 +52,10 @@ class ClassificationTrainDS(IterableDataset):
                 cur_chunk[fname] = (cur_chunk[fname] - self.to_sub[findex]) / self.to_div[findex]
                 
             for dindex, idname in enumerate(self.idlist):
-                cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex][str(x)])
+                if self.isTrain:
+                    cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex].get(str(x), 0) if random.random() > 0.006 else 0)
+                else:
+                    cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex].get(str(x), 0))
                 
             finputs = cur_chunk[self.flist].values
             idinputs = cur_chunk[self.idlist].values

@@ -5,6 +5,7 @@ from tqdm import tqdm
 import json
 import argparse
 from utils.config import NNConfig
+import collections
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dpath", default="data", type=str,
@@ -21,22 +22,23 @@ args = parser.parse_args()
 filep = os.path.join(args.dpath, args.filep)
 validp = os.path.join(args.dpath, args.vfilep)
 headp = os.path.join(args.dpath, args.headp)
-outp = os.path.join(args.dpath, "meta_info.json")
+outp = os.path.join(args.dpath, "freq_info.json")
 print('load data')
 header = pd.read_csv(headp, sep='\t')
 df = pd.read_csv(filep, sep='\t', names=header.columns, iterator=True, chunksize=args.chunk_size)
 vdf = pd.read_csv(validp, sep='\t', names=header.columns, iterator=True, chunksize=args.chunk_size)
 
 flist = [x for x in list(header.columns) if 'Feature' in x]
+
 ugelist = ['uge{}'.format(l) for l in range(32)]
 agelist = ['age{}'.format(l) for l in range(32)]
 flist = flist + ugelist + agelist
+
 id_feature = ["m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:TagId", "m:PublisherFullDomainHash", "m:PublisherId", "m:UserAgentNormalizedHash","m:DeviceOSHash"]
 
 ilen = len(id_feature)
 flen = len(flist)
-idxdicts = idxdicts = [{} for _ in range(ilen)]
-idxrecord = [0] * ilen
+idxfreq = [collections.defaultdict(int) for _ in range(ilen)]
 min_list = []
 max_list = []
 
@@ -65,9 +67,7 @@ def get_meta_info(chunk):
     for j in range(ilen):
         idname = id_feature[j]
         for v in chunk[idname]:
-            if v not in idxdicts[j]:
-                idxdicts[j][v] = idxrecord[j]
-                idxrecord[j] += 1
+            idxfreq[j][v] += 1
 
 total_row = 0
 positive_row = 0
@@ -79,6 +79,12 @@ for chunk in tqdm(df):
 print('train', total_row, positive_row, total_row - positive_row, 
                         (total_row - positive_row) / positive_row)
 
+for i in range(flen):
+    if min_list[i] == max_list[i]:
+        print(flist[i])
+
+total_ob = total_row
+
 total_row = 0
 positive_row = 0
 for chunk in tqdm(vdf):
@@ -88,6 +94,8 @@ for chunk in tqdm(vdf):
 
 print('validation', total_row, positive_row, total_row - positive_row, 
                         (total_row - positive_row) / positive_row)
+
+total_ob += total_row
 
 to_minus = []
 to_div = []
@@ -104,7 +112,8 @@ infodict = {
     "to_minus": to_minus,
     "to_div": to_div,
     "all_ids": id_feature,
-    "dicts": idxdicts
+    "freq": idxfreq,
+    "total_count": total_ob
 }
 
 json.dump(infodict, open(outp, "w"))

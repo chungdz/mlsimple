@@ -4,12 +4,11 @@ import numpy as np
 import os
 
 class NNConfig():
-    def __init__(self, dpath='data', additionId=False, no_id=False, has_emb=False):
+    def __init__(self, dpath='data', additionId=False, no_id=False):
 
         self.hidden = 100
         self.emb_size = 10
         self.uaemb = 32
-        self.has_emb = has_emb
         self.dpath = dpath
         self.weight_decay = 1/70
         self.meta = json.load(open(os.path.join(dpath, 'meta_info.json'), 'r'))

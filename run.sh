@@ -9,7 +9,8 @@ python train_rand.py --dpath=data \
                     --vfilep=valid.tsv \
                     --epoch=2 \
                     --plots=plots/samples.jpg \
-                    --save_path=cps_samples
+                    --save_path=cps_samples \
+                    --points=50
 # one day full data
 python -m preprocess.get_meta --dpath=/data/yunfanhu/mannual --filep=one_day_0.tsv --vfilep=sample_1M.tsv --chunk_size=50000
 # 4 GPUs

@@ -10,7 +10,7 @@ class NNConfig():
         self.emb_size = 10
         self.uaemb = 32
         self.dpath = dpath
-        self.weight_decay = 1/70
+        self.weight_decay = 1
         self.meta = json.load(open(os.path.join(dpath, 'meta_info.json'), 'r'))
         self.flist = ["Feature_1_garbage1_none",
                 "Feature_1_COECUsingClicks_add1thenlogthenmultiplyby1000",

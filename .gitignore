@@ -11,5 +11,9 @@
 /cifar100/
 /landmark/
 /cps/
+*/scopes*/
+*.zip
+*.jpg
+checkPara*
 
 Class unify.ipynb

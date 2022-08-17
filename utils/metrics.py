@@ -100,29 +100,21 @@ def cal_metric(labels, preds, metrics):
 def compute_metrics(p):
     y_pred = p.predictions.flatten()
     precision, recall, _ = precision_recall_curve(p.label_ids, y_pred)
-    ysize = p.label_ids.shape[0]
-    clickp = sum(p.label_ids) / ysize
-    yEntropy = -(clickp * math.log(clickp) + (1 - clickp) * math.log(1 - clickp))
 
-    lsum = []
-    # implement the same as pytorch: log output show be greater or equal than -100
-    for i in range(ysize):
-        if p.label_ids[i] == 1:
-            cur_num = y_pred[i]
-        else:
-            cur_num = 1 - y_pred[i]
+    Z = np.stack((p.label_ids, y_pred), axis=1).astype(np.float64)
+    (n_sample, n_feature) = Z.shape
+    # metrics
+    loglikelihood = (np.sum(Z[:, 0] * np.log(Z[:, 1])) + 
+    np.sum((1 - Z[:, 0]) * np.log(1 - Z[:, 1]))) / n_sample
+    overallp = np.sum(Z[:, 0]) / n_sample
+    H = -(overallp * np.log(overallp + 0.000001) + (1 - overallp) * np.log(1 - overallp + 0.000001))
+    rig = (loglikelihood + H) / H
 
-        if cur_num < math.e ** -100:
-            lsum.append(-100)
-        else:
-            lsum.append(math.log(y_pred[i]))
-
-    llxy = sum(lsum)
 
     return {
         "ROC AUC": roc_auc_score(p.label_ids, y_pred),
         "MRR": mrr_score(p.label_ids, y_pred),
         "nDCG": ndcg_score(p.label_ids, y_pred, k=y_pred.shape[0] // 10),
         "Precison-Recall AUC": auc(recall, precision),
-        "RIG": (llxy / ysize + yEntropy) / yEntropy
+        "RIG": rig
     }

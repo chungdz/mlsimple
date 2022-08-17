@@ -1,7 +1,15 @@
 source ~/.bashrc
 
 mkdir data cps
-
+# small dataset
+python -m preprocess.get_meta --dpath=data --filep=sample.tsv --vfilep=valid.tsv --chunk_size=50000
+python train_rand.py --dpath=data \
+                    --batch_size=512 \
+                    --filep=sample.tsv \
+                    --vfilep=valid.tsv \
+                    --epoch=2 \
+                    --plots=plots/samples.jpg \
+                    --save_path=cps_samples
 # one day full data
 python -m preprocess.get_meta --dpath=/data/yunfanhu/mannual --filep=one_day_0.tsv --vfilep=sample_1M.tsv --chunk_size=50000
 # 4 GPUs

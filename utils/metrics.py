@@ -97,11 +97,10 @@ def cal_metric(labels, preds, metrics):
             raise ValueError("not define this metric {0}".format(metric))
     return res
 
-def compute_metrics(p):
-    y_pred = p.predictions.flatten()
-    precision, recall, _ = precision_recall_curve(p.label_ids, y_pred)
+def cm(y_pred, y_target):
 
-    Z = np.stack((p.label_ids, y_pred), axis=1).astype(np.float64)
+    precision, recall, _ = precision_recall_curve(y_target, y_pred)
+    Z = np.stack((y_target, y_pred), axis=1).astype(np.float64)
     (n_sample, n_feature) = Z.shape
     # metrics
     loglikelihood = (np.sum(Z[:, 0] * np.log(Z[:, 1])) + 
@@ -110,11 +109,15 @@ def compute_metrics(p):
     H = -(overallp * np.log(overallp + 0.000001) + (1 - overallp) * np.log(1 - overallp + 0.000001))
     rig = (loglikelihood + H) / H
 
-
     return {
-        "ROC AUC": roc_auc_score(p.label_ids, y_pred),
-        "MRR": mrr_score(p.label_ids, y_pred),
-        "nDCG": ndcg_score(p.label_ids, y_pred, k=y_pred.shape[0] // 10),
+        "ROC AUC": roc_auc_score(y_target, y_pred),
+        "MRR": mrr_score(y_target, y_pred),
+        "nDCG": ndcg_score(y_target, y_pred, k=y_pred.shape[0] // 10),
         "Precison-Recall AUC": auc(recall, precision),
         "RIG": rig
     }
+
+def compute_metrics(p):
+    y_pred = p.predictions.flatten()
+    y_target = p.label_ids
+    return cm(y_pred, y_target)

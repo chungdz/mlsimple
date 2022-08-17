@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from sklearn.calibration import calibration_curve
 import os
 import argparse
+from utils.metrics import cm
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--spath", default="plots/res.jpg", type=str,
@@ -17,6 +18,7 @@ parser.add_argument("--ns", action='store_true', help='whether to add AdId and U
 args = parser.parse_args()
 print('load results')
 m0df = pd.read_csv(args.res)
+print(cm(m0df['predictions'].values, m0df['labels'].values))
 print('build calibration point')
 ctrue0, cpred0 = calibration_curve(m0df['labels'], 
                                 m0df['predictions'], 

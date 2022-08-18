@@ -55,14 +55,10 @@ class ClassificationTrainDS(IterableDataset):
                 else:
                     cur_chunk[idname] = cur_chunk[idname].apply(lambda x: self.dicts[dindex].get(str(x), 0))
                 
+            finputs = cur_chunk[self.flist].values
             idinputs = cur_chunk[self.idlist].values
             targets = cur_chunk["m:Click"].values
-
-            if self.has_emb:
-                finputs = cur_chunk[self.flist + self.uemb + self.aemb].values
-            else:
-                finputs = cur_chunk[self.flist].values
-                
+            
             if not worker_info is None:  # single-process data loading, return the full iterator
                 assert(worker_info.num_workers == 1)
             

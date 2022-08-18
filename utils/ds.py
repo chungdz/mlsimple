@@ -32,13 +32,7 @@ class ClassificationTrainDS(IterableDataset):
         self.to_sub = to_sub
         self.to_div = to_div
         self.dicts = dicts
-        self.chunk_size = chunk_size
-
-        self.has_emb = cfg.has_emb
-        if cfg.has_emb:
-            self.uemb = [x for x in list(self.header.columns) if 'Uemb' in x]
-            self.aemb = [x for x in list(self.header.columns) if 'Aemb' in x]
-            
+        self.chunk_size = chunk_size     
     
     def init_reader(self):
         self.dfiter = iter(pd.read_csv(self.filep, sep='\t', names=self.header.columns, iterator=True, chunksize=self.chunk_size))

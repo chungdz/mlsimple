@@ -28,7 +28,7 @@ header = pd.read_csv(headp, sep='\t')
 df = pd.read_csv(filep, sep='\t', names=header.columns, iterator=True, chunksize=args.chunk_size)
 vdf = pd.read_csv(validp, sep='\t', names=header.columns, iterator=True, chunksize=args.chunk_size)
 
-flist = [x for x in list(header.columns) if 'Feature' in x]
+flist = [x for x in list(header.columns) if 'Feature' in x] + ["cos_uge", "cos_uge_Mis"]
 id_feature = ["m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:TagId", "m:PublisherFullDomainHash", "m:PublisherId", "m:UserAgentNormalizedHash","m:DeviceOSHash"]
 
 ilen = len(id_feature)

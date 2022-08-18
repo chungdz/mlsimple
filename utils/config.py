@@ -70,7 +70,9 @@ class NNConfig():
                 "Feature_163_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5",
                 "Feature_7240_garbage1_none_5",
                 "Feature_7240_RTImpressions_add1thenlogthenmultiplyby1000_5",
-                "Feature_7240_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5"
+                "Feature_7240_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5",
+                "cos_uge",
+                "cos_uge_Mis"
                 ]
         self.flist_0 = ["Feature_1_garbage1_none" 
                         ,"Feature_163_garbage1_none_5"

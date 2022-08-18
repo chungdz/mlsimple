@@ -57,9 +57,9 @@ python train.py --dpath=/data/yunfanhu/samples_20 \
                     --filep=train.tsv \
                     --vfilep=valid_5M.tsv \
                     --max_steps=300000 \
-                    --save_path=cps_noid_w1 \
+                    --save_path=cps_noid \
                     --with_id=0 \
-                    --plots=plots/baseline_w1.jpg \
+                    --plots=plots/baseline.jpg \
                     --save_steps=30000
 # small train
 python train_rand.py --dpath=/data/yunfanhu/samples \

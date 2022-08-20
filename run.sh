@@ -70,8 +70,8 @@ python train_rand.py --dpath=/data/yunfanhu/samples \
                     --save_path=cps_small
 # build plot
 python -m utils.plot_two_cali --spath=plots/two.jpg \
-                                --m0=cps_noid_w1/res.csv \
-                                --m1=cps2/res.csv \
+                                --m0=cps_noid/baseline_new/res.csv \
+                                --m1=cps_20/m1_new/res.csv \
                                 --points=500 \
                                 --sample=quantile
 

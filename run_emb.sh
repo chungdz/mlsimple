@@ -10,4 +10,3 @@ python train_emb.py --dpath=/data/yunfanhu/samples_emb \
                     --save_path=cps_emb \
                     --plots=plots/m1_emb.jpg \
                     --save_steps=30000
- 

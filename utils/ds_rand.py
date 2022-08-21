@@ -43,13 +43,14 @@ class ClassificationTrainDS(Dataset):
         self.finputs = cur_chunk[self.flist].values      
         self.idinputs = cur_chunk[self.idlist].values
         self.targets = cur_chunk["m:Click"].values
-                
+        self.indexes = cur_chunk.index.values
 
     def __getitem__(self, index):
         return {
             "finputs": torch.FloatTensor(self.finputs[index]),
             "idinputs": torch.LongTensor(self.idinputs[index]),
-            'label': self.targets[index]
+            'labels': self.targets[index],
+            'indexes': self.indexes[index]
         }
 
     def __len__(self):
@@ -59,5 +60,6 @@ def collate_fn(batch):
     return {
         'finputs': torch.stack([x['finputs'] for x in batch]),
         "idinputs" : torch.stack([x['idinputs'] for x in batch]),
-        'labels': torch.FloatTensor([x['label'] for x in batch])
+        'labels': torch.FloatTensor([x['labels'] for x in batch]),
+        'indexes': torch.FloatTensor([x['indexes'] for x in batch])
     }

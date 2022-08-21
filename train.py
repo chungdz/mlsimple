@@ -107,7 +107,7 @@ trainer = Trainer(model=model,
 print('start training')
 trainer.train(resume_from_checkpoint=args.resume_checkpoint)
 print('predict and plot')
-(res, raw_res), label_ids, metrics = trainer.predict(validset)
+(res, raw_res, indexes), label_ids, metrics = trainer.predict(validset)
 print('raw min and max', raw_res.min(), raw_res.max())
 ctrue, cpred = calibration_curve(label_ids, res.flatten(), n_bins=args.points, strategy="quantile", pos_label=1)
 df = pd.DataFrame({'labels': label_ids, 'predictions': res.flatten()})

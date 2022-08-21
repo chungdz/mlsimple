@@ -39,6 +39,7 @@ class ClassificationTrainDS(IterableDataset):
 
     def __iter__(self):
         self.init_reader()
+        row_index = 0
         worker_info = torch.utils.data.get_worker_info()
         while True:
             try:
@@ -62,10 +63,15 @@ class ClassificationTrainDS(IterableDataset):
             if not worker_info is None:  # single-process data loading, return the full iterator
                 assert(worker_info.num_workers == 1)
             
+            # add row index for training boosting tree
+            batch_size = cur_chunk.shape[0]
+            cur_index = torch.arange(row_index, row_index + batch_size)
+            
             yield {
                     "finputs": torch.FloatTensor(finputs),
                     "idinputs": torch.LongTensor(idinputs),
-                    'labels': torch.FloatTensor(targets)
+                    'labels': torch.FloatTensor(targets),
+                    'indexes': cur_index
             }
         
         return
@@ -74,5 +80,6 @@ def collate_fn(batch):
     return {
         'finputs': torch.cat([x['finputs'] for x in batch], dim=0),
         "idinputs" : torch.cat([x['idinputs'] for x in batch], dim=0),
-        'labels': torch.cat([x['labels'] for x in batch], dim=0)
+        'labels': torch.cat([x['labels'] for x in batch], dim=0),
+        'indexes': torch.cat([x['labels'] for x in batch], dim=0)
     }

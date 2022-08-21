@@ -66,6 +66,7 @@ class ClassificationTrainDS(IterableDataset):
             # add row index for training boosting tree
             batch_size = cur_chunk.shape[0]
             cur_index = torch.arange(row_index, row_index + batch_size)
+            row_index += batch_size
             
             yield {
                     "finputs": torch.FloatTensor(finputs),
@@ -81,5 +82,5 @@ def collate_fn(batch):
         'finputs': torch.cat([x['finputs'] for x in batch], dim=0),
         "idinputs" : torch.cat([x['idinputs'] for x in batch], dim=0),
         'labels': torch.cat([x['labels'] for x in batch], dim=0),
-        'indexes': torch.cat([x['labels'] for x in batch], dim=0)
+        'indexes': torch.cat([x['indexes'] for x in batch], dim=0)
     }

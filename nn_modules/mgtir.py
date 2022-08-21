@@ -19,9 +19,7 @@ class MGTIR(nn.Module):
             nn.Linear(self.idlen * cfg.emb_size, self.hidden // 2),
             nn.ReLU()
         )
-        self.seq3 = nn.Sequential(
-            nn.Linear(self.hidden + self.hidden // 2, 1),
-            nn.Sigmoid())
+        self.seq3 = nn.Linear(self.hidden + self.hidden // 2, 1)
         
         selected = []
         for idname in cfg.idlist:
@@ -39,7 +37,8 @@ class MGTIR(nn.Module):
 
     def forward(self, finputs, idinputs, labels):
 
-        logits = self.predict(finputs, idinputs)
+        raw_logits = self.predict(finputs, idinputs)
+        logits = torch.sigmoid(raw_logits)
 
         loss_weights = torch.clone(labels)
         loss_weights.masked_fill_(~loss_weights.bool(), self.wd)
@@ -47,7 +46,8 @@ class MGTIR(nn.Module):
 
         return {
             'loss': loss,
-            'logits': logits
+            'logits': logits,
+            'raw': raw_logits
         }
 
 

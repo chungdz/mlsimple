@@ -20,9 +20,7 @@ class MGTIR(nn.Module):
             nn.Linear((self.idlen + 2) * cfg.emb_size, self.hidden // 2),
             nn.ReLU()
         )
-        self.seq3 = nn.Sequential(
-            nn.Linear(self.hidden + self.hidden // 2, 1),
-            nn.Sigmoid())
+        self.seq3 = nn.Linear(self.hidden + self.hidden // 2, 1)
         
         self.ufc = nn.Sequential(
             nn.Linear(self.uaemb, cfg.emb_size),
@@ -74,7 +72,8 @@ class MGTIR(nn.Module):
 
     def forward(self, finputs, idinputs, masks, labels):
 
-        logits = self.predict(finputs, idinputs, masks)
+        raw_logits = self.predict(finputs, idinputs, masks)
+        logits = torch.sigmoid(raw_logits)
 
         loss_weights = torch.clone(labels)
         loss_weights.masked_fill_(~loss_weights.bool(), self.wd)
@@ -82,5 +81,6 @@ class MGTIR(nn.Module):
 
         return {
             'loss': loss,
-            'logits': logits
+            'logits': logits,
+            'raw': raw_logits
         }

@@ -118,6 +118,6 @@ def cm(y_pred, y_target):
     }
 
 def compute_metrics(p):
-    y_pred = p.predictions.flatten()
+    y_pred = p.predictions[0].flatten()
     y_target = p.label_ids
     return cm(y_pred, y_target)

@@ -7,12 +7,13 @@ import pandas as pd
 import random
 
 class ClassificationTrainDS(IterableDataset):
-    def __init__(self, cfg, headerp, filep, chunk_size, isTrain=True):
+    def __init__(self, cfg, headerp, filep, chunk_size, isTrain=True, printIndex=None):
         super(ClassificationTrainDS).__init__()
         
         self.header = pd.read_csv(headerp, sep='\t')
         self.filep = filep
         self.isTrain = isTrain
+        self.printIndex = printIndex
         
         dicts = []
         to_sub = []
@@ -40,6 +41,7 @@ class ClassificationTrainDS(IterableDataset):
     def __iter__(self):
         self.init_reader()
         row_index = 0
+        stepNum = 0
         worker_info = torch.utils.data.get_worker_info()
         while True:
             try:
@@ -67,6 +69,9 @@ class ClassificationTrainDS(IterableDataset):
             batch_size = cur_chunk.shape[0]
             cur_index = torch.arange(row_index, row_index + batch_size)
             row_index += batch_size
+            stepNum += 1
+            if not self.printIndex is None and stepNum % self.printIndex == 0:
+                print(row_index, stepNum)
             
             yield {
                     "finputs": torch.FloatTensor(finputs),

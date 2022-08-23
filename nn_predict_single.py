@@ -45,7 +45,7 @@ print('load config')
 cfg = NNConfig(args.dpath, additionId=False, no_id=(args.with_id == 0))
 headerp = os.path.join(args.dpath, args.headp)
 tfilep = os.path.join(args.dpath, args.filep)
-resp = os.path.join(args.dpath, args.resp)
+resp = os.path.join(args.save_path, args.resp)
 print('load dataset')
 validset = ClassificationTrainDS(cfg, headerp, tfilep, args.chunk_size, isTrain=False)
 dl = DataLoader(validset,

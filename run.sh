@@ -92,4 +92,18 @@ python -m preprocess.get_meta --dpath=/data/yunfanhu/samples_20 \
 
 python -m preprocess.process_meta --dpath=/data/yunfanhu/samples_20 \
                                     --drop_num=10
+# build files for tree
+python nn_predict_single.py --dpath=/data/yunfanhu/samples_20 \
+                            --save_path=cps_20 \
+                            --checkpoint=cps_20/m1_0821_raw/pytorch_model.bin \
+                            --resp=train_prob.tsv \
+                            --filep=train.tsv \
+                            --total_len=543886254
+
+python nn_predict_single.py --dpath=/data/yunfanhu/samples_20 \
+                            --save_path=cps_20 \
+                            --checkpoint=cps_20/m1_0821_raw/pytorch_model.bin \
+                            --resp=valid_prob.tsv \
+                            --filep=valid_5M.tsv \
+                            --total_len=5000000
 

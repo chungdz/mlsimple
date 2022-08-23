@@ -102,9 +102,9 @@ print('save')
 with open(resp, 'w', encoding='utf-8') as f:
     f.write('Prediction' + '\t' + 'Target\n')
     for i in range(total_row):
-        f.write(final_res[i])
+        f.write(str(final_res[i]))
         f.write('\t')
-        f.write(target[i])
+        f.write(str(target[i]))
         f.write('\n')
 
 # print('calculate metrics')

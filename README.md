@@ -37,7 +37,7 @@ Before train the model, meta infomation should be gathered to help transform the
 
 Min and max of the counting features are collected. It is better than mean and standard diviation for normalizing the counting feature. First, min and max are easy to collect and do not need to calculate. Second, for features only have zero and one, the normalized featrue stays the same. Third, for features has only one unique number, it avoids number divided by zero.
 
-The frequencies of each unique ID are gathered. The IDs appears less than threshold are map to *<Unknown>*.
+The frequencies of each unique ID are gathered. The IDs appears less than threshold are map to *Unknown*.
 
 The meta information is stored as Json format and in the same folder of the train.tsv.
 
@@ -70,10 +70,23 @@ python -m preprocess.process_meta --dpath=/data/yunfanhu/samples_emb \
 The meaning of each argument can be found in python code or use *-h*
 
 # Training and testing
-To train the model, run:
+To train the model without UGE embeddings two codes can be run:
+
 ```shell
-CUDA_VISIBLE_DEVICES=0,1,2,3 python training.py --gpus=4 --epoch=10
+python train.py --dpath=/data/yunfanhu/samples_20 \
+                    --batch_size=2 \
+                    --chunk_size=2048 \
+                    --filep=train.tsv \
+                    --vfilep=valid_5M.tsv \
+                    --max_steps=300000 \
+                    --save_path=cps_20 \
+                    --plots=plots/m1_20.jpg \
+                    --save_steps=30000
 ```
+
+The meaning of each argument can be found in python code or use *-h*. This code iteratively fetch data chunk from disk to avoid memory problem when dataset is too large. The chunk size can not be too large or too small. Either case makes GPUs hungry. The arguments related to steps need to be calculate before training start. 
+
+For example, the D3 dataset has 543886254 rows. With number of GPUs in environment is 4, batch size is 2, and chunk size is 2048, the rows consumed by one step is 4 * 2 * 2048 = 16384. 
 
 Based on the validation results, choose parameters from one epoch (i.e. epoch 3) to do the test:
 ```shell

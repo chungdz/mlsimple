@@ -8,14 +8,14 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--spath", default="plots/res.jpg", type=str,
                         help="save path")
 parser.add_argument("--m1", default="cps_small/res.csv", type=str,
-                        help="root path of all data")
+                        help="on which M1 result data generate the plot")
 parser.add_argument("--m0", default="cps_small/no_id.csv", type=str,
-                        help="root path of all data")
+                        help="on which baseline result data generate the plot")
 parser.add_argument("--points", default=500, type=int,
-                        help="default has id")
+                        help="maximum number of bins as well as points in the calibration plot")
 parser.add_argument("--sample", default="uniform", type=str,
-                        help="way to sample quantile or uniform")
-parser.add_argument("--ns", action='store_true', help='whether to add AdId and UserId')
+                        help="quantile or uniform bin for calibration plot")
+parser.add_argument("--ns", action='store_true', help='use normal scale instead of log log scale')
 args = parser.parse_args()
 print('load results')
 m0df = pd.read_csv(args.m0)

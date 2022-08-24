@@ -129,10 +129,12 @@ python train_emb.py --dpath=/data/yunfanhu/samples_emb \
 ```
 The usage of arguments is similar to *train.py*.
 
-# Metrics
+# Evaluation
+
+## Metrics
 Five metrics are used during training process: ROC AUC, MRR, nDCG, Precison-Recall AUC, RIG. For details, check *utils/metrics.py*.
 
-# Calibration Plots
+## Calibration Plots
 After training process finished, parameters with best ROC AUC are loaded, and predictions are made for validation dataset. The result is saved as *res.csv* in the save_path, which can be used to plot calibration plot and do other analysis. The result has two columns, labels and predictions.
 
 Calibration plot is saved in target path after training is finished. But if want to manually plot based on result file:
@@ -156,7 +158,7 @@ python -m utils.plot_two_cali --spath=plots/two.jpg \
 ```
 The meaning of each argument can be found in python code or use *-h*. 
 
-# lightgbm for find feature importance
+## lightgbm for find feature importance
 LightGBM is used to calculate feature importance.
 
 ```shell
@@ -167,7 +169,7 @@ python train_lightgmb.py  --dpath=/data/yunfanhu/samples \
 ```
 The meaning of each argument can be found in python code or use *-h*. 
 
-# Get prediction of training and validation dataset
+## Get prediction of training and validation dataset
 Get the prediction result of training and validation dataset. The model checkpoints with best results should be set in the arguments. Use single CPU/GPU to do this.
 
 ```shell

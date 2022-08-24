@@ -80,7 +80,7 @@ python -m utils.plot_one_cali --spath=plots/one.jpg \
                                 --sample=quantile
 
 # train lightgbm for importance
-python train_catboost.py  --dpath=/data/yunfanhu/samples \
+python train_lightgmb.py  --dpath=/data/yunfanhu/samples \
                     --filep=train_5M.tsv \
                     --vfilep=valid_1M.tsv
 # process bigger files            

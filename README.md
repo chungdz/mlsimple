@@ -133,7 +133,7 @@ The usage of arguments is similar to *train.py*.
 Five metrics are used during training process: ROC AUC, MRR, nDCG, Precison-Recall AUC, RIG. For details, check *utils/metrics.py*.
 
 # Calibration Plots
-After training process finished, parameters with best ROC AUC are loaded, and predictions are made for validation dataset. The result is saved as *res.csv* in the save_path, which can be used to plot calibration plot and do other analysis.
+After training process finished, parameters with best ROC AUC are loaded, and predictions are made for validation dataset. The result is saved as *res.csv* in the save_path, which can be used to plot calibration plot and do other analysis. The result has two columns, labels and predictions.
 
 Calibration plot is saved in target path after training is finished. But if want to manually plot based on result file:
 
@@ -153,5 +153,16 @@ python -m utils.plot_two_cali --spath=plots/two.jpg \
                                 --m1=cps_20/m1_new/res.csv \
                                 --points=500 \
                                 --sample=quantile
+'''
+The meaning of each argument can be found in python code or use *-h*. 
+
+# lightgbm for find feature importance
+LightGBM is used to calculate feature importance.
+
+'''shell
+python train_lightgmb.py  --dpath=/data/yunfanhu/samples \
+                    --filep=train_5M.tsv \
+                    --vfilep=valid_1M.tsv \
+                    --sfilep=para/fimp.tsv
 '''
 The meaning of each argument can be found in python code or use *-h*. 

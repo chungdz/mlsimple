@@ -43,11 +43,11 @@ parser.add_argument("--dpath", default="/data/yunfanhu/samples/", type=str,
 parser.add_argument("--filep", default="train.tsv", type=str,
                         help="train file")
 parser.add_argument("--headp", default="header.tsv", type=str,
-                        help="train file")
+                        help="header file")
 parser.add_argument("--vfilep", default="valid.tsv", type=str,
                         help="valid file")
-parser.add_argument("--with_id", default=1, type=int,
-                        help="default has id")
+parser.add_argument("--sfilep", default="para/fimp.tsv", type=str,
+                        help="place to save importance")
 args = parser.parse_args()
 
 print('load config')
@@ -104,4 +104,5 @@ print(results)
 
 feature_imp = pd.DataFrame({'Value': gbm.feature_importance(), 'Feature': x_train.columns}).sort_values('Value', axis=0)
 print(feature_imp)
-feature_imp.to_csv('para/fimp.tsv', sep='\t', index=None)
+feature_imp.to_csv(args.sfilep, sep='\t', index=None)
+

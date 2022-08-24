@@ -75,6 +75,8 @@ The meaning of each argument can be found in python code or use *-h*
 
 # Training and testing
 
+The framework of training use huggingface framework. It automatically uses all GPUs in environment. If no GPUs then CPU is used. Checkpoints and runtime information are saved automatically in the target path and are named pytorch_model.bin and trainer_state.json respectively.
+
 ## To train the model without UGE embeddings
 Two codes can be run:
 
@@ -127,5 +129,29 @@ python train_emb.py --dpath=/data/yunfanhu/samples_emb \
 ```
 The usage of arguments is similar to *train.py*.
 
-# Experiment Environment
-This model was trained and tested by using 4 Tesla P40 GPUs. The memory of the device was 128GB.
+# Metrics
+Five metrics are used during training process: ROC AUC, MRR, nDCG, Precison-Recall AUC, RIG. For details, check *utils/metrics.py*.
+
+# Calibration Plots
+After training process finished, parameters with best ROC AUC are loaded, and predictions are made for validation dataset. The result is saved as *res.csv* in the save_path, which can be used to plot calibration plot and do other analysis.
+
+Calibration plot is saved in target path after training is finished. But if want to manually plot based on result file:
+
+'''shell
+python -m utils.plot_one_cali --spath=plots/one.jpg \
+                                --res=cps2/res.csv \
+                                --points=500 \
+                                --sample=quantile
+'''
+The meaning of each argument can be found in python code or use *-h*. 
+
+Also, the result of two models can be plot together:
+
+'''shell
+python -m utils.plot_two_cali --spath=plots/two.jpg \
+                                --m0=cps_noid/baseline_new/res.csv \
+                                --m1=cps_20/m1_new/res.csv \
+                                --points=500 \
+                                --sample=quantile
+'''
+The meaning of each argument can be found in python code or use *-h*. 

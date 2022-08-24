@@ -137,32 +137,52 @@ After training process finished, parameters with best ROC AUC are loaded, and pr
 
 Calibration plot is saved in target path after training is finished. But if want to manually plot based on result file:
 
-'''shell
+```shell
 python -m utils.plot_one_cali --spath=plots/one.jpg \
                                 --res=cps2/res.csv \
                                 --points=500 \
                                 --sample=quantile
-'''
+```
 The meaning of each argument can be found in python code or use *-h*. 
 
 Also, the result of two models can be plot together:
 
-'''shell
+```shell
 python -m utils.plot_two_cali --spath=plots/two.jpg \
                                 --m0=cps_noid/baseline_new/res.csv \
                                 --m1=cps_20/m1_new/res.csv \
                                 --points=500 \
                                 --sample=quantile
-'''
+```
 The meaning of each argument can be found in python code or use *-h*. 
 
 # lightgbm for find feature importance
 LightGBM is used to calculate feature importance.
 
-'''shell
+```shell
 python train_lightgmb.py  --dpath=/data/yunfanhu/samples \
                     --filep=train_5M.tsv \
                     --vfilep=valid_1M.tsv \
                     --sfilep=para/fimp.tsv
-'''
+```
 The meaning of each argument can be found in python code or use *-h*. 
+
+# Get prediction of training and validation dataset
+Get the prediction result of training and validation dataset. The model checkpoints with best results should be set in the arguments. Use single CPU/GPU to do this.
+
+```shell
+python nn_predict_single.py --dpath=/data/yunfanhu/samples_20 \
+                            --save_path=cps_20 \
+                            --checkpoint=cps_20/m1_0821_raw/pytorch_model.bin \
+                            --resp=train_prob.tsv \
+                            --filep=train.tsv \
+                            --total_len=543886254
+
+python nn_predict_single.py --dpath=/data/yunfanhu/samples_20 \
+                            --save_path=cps_20 \
+                            --checkpoint=cps_20/m1_0821_raw/pytorch_model.bin \
+                            --resp=valid_prob.tsv \
+                            --filep=valid_5M.tsv \
+                            --total_len=5000000
+
+```

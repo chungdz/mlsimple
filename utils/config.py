@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 class NNConfig():
-    def __init__(self, dpath='data', additionId=False, no_id=False):
+    def __init__(self, dpath='data', additionId=False, no_id=False, has_uge=True):
 
         self.hidden = 100
         self.emb_size = 10
@@ -71,9 +71,9 @@ class NNConfig():
                 "Feature_7240_garbage1_none_5",
                 "Feature_7240_RTImpressions_add1thenlogthenmultiplyby1000_5",
                 "Feature_7240_RTNonClicksByClicks_add1thenlogthenmultiplyby1000_5",
-                "cos_uge",
-                "cos_uge_Mis"
                 ]
+        if has_uge:
+            self.flist = self.flist + ["cos_uge", "cos_uge_Mis"]
         self.flist_0 = ["Feature_1_garbage1_none" 
                         ,"Feature_163_garbage1_none_5"
                         ,"Feature_1194_garbage1_none_5"

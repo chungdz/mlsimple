@@ -33,7 +33,7 @@ flist = [x for x in list(header.columns) if 'Feature' in x]
 
 ugelist = ['uge{}'.format(l) for l in range(32)]
 agelist = ['age{}'.format(l) for l in range(32)]
-flist = flist + ugelist + agelist
+flist = flist + ugelist + agelist + ["cos_uge", "cos_uge_Mis"]
 
 id_feature = ["m:OrderId", "m:CampaignId", "m:AdvertiserId", "m:TagId", "m:PublisherFullDomainHash", "m:PublisherId", "m:UserAgentNormalizedHash","m:DeviceOSHash"]
 

@@ -32,20 +32,38 @@ Instruction to install other packages.
 pip install datasets transformers tensorboard sklearn lightgbm matplotlib ipython
 ``` 
 
-# prepare the runnable dataset
-The dataset downloaded from website cannot be used currently, and need to be processed first.
+# Get meta infomation of different features
+Before train the model, meta infomation should be gathered to help transform the data. Min and max of the counting features are collected. It is better than mean and standard diviation for normalizing the counting feature. First, min and max are easy to collect and do not need to calculate. Second, for features only have zero and one, the normalized featrue stays the same. Third, for features has only one unique number, it avoids number divided by zero.
+
+The meta information is stored as Json format and in the same folder of the train.tsv.
+
+For dataset without UGE embeddings, the example instructions are:
 
 ```shell
-chmod -R 700 run.sh
-./run.sh
+python -m preprocess.get_meta --dpath=/data/yunfanhu/samples_20 \
+                            --filep=train.tsv \
+                            --vfilep=valid.tsv \
+                            --chunk_size=50000
+
+python -m preprocess.process_meta --dpath=/data/yunfanhu/samples_20 \
+                                    --drop_num=10
 ``` 
 
-run.sh assumes 4 GPUs will be used, if the GPU number is different, change the processes argument in the code:
+The meaning of each argument can be found in python code or use *-h*
+
+For dataset with UGE embeddings, the example instructions are:
 
 ```
-python -m prepocess.convert_train --processes=#GPUs
+python -m preprocess.get_meta_emb --dpath=/data/yunfanhu/samples_emb \
+                                --filep=train.tsv \
+                                --vfilep=valid.tsv \
+                                --chunk_size=50000
+python -m preprocess.process_meta --dpath=/data/yunfanhu/samples_emb \
+                                    --drop_num=10
+
 ```
-Number of GPUs can be 1, 2, 4, 8. 
+
+The meaning of each argument can be found in python code or use *-h*
 
 # Training and testing
 To train the model, run:

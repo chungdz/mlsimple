@@ -32,25 +32,25 @@ parser.add_argument("--save_path", default='cps_small', type=str, help="path to 
 parser.add_argument("--resume_checkpoint", action='store_true', help='''whether to start training from scratch 
                             or load parameter saved before and continue training. For example, if start_epoch=/mnt/cifar/checkpoint-20, then model will load parameter 
                             in the path and continue the epoch of training after 20 steps''')
-parser.add_argument("--additionId", action='store_true', help='whether to add AdId and UserId')
+# parser.add_argument("--additionId", action='store_true', help='whether to add AdId and UserId')
 parser.add_argument("--filep", default="train_5M.tsv", type=str,
                         help="train file")
 parser.add_argument("--headp", default="header.tsv", type=str,
-                        help="train file")
+                        help="header file")
 parser.add_argument("--vfilep", default="valid_1M.tsv", type=str,
                         help="valid file")
 parser.add_argument("--with_id", default=1, type=int,
-                        help="default has id")
+                        help="if set to 0, no id features will be used")
 parser.add_argument("--points", default=500, type=int,
-                        help="default has id")
+                        help="maximum number of bins as well as points in the calibration plot")
 parser.add_argument("--plots", default="plots/cali.jpg", type=str,
-                        help="picture file")
+                        help="path to save calibration plot")
 args = parser.parse_args()
 
 print('load config')
 if args.additionId:
     print('add user id and add id')
-cfg = NNConfig(args.dpath, additionId=args.additionId, no_id=(args.with_id == 0))
+cfg = NNConfig(args.dpath, additionId=False, no_id=(args.with_id == 0))
 headerp = os.path.join(args.dpath, args.headp)
 trainp = os.path.join(args.dpath, args.filep)
 validp = os.path.join(args.dpath, args.vfilep)

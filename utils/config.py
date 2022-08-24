@@ -105,6 +105,7 @@ class NNConfig():
                     "m:UserAgentNormalizedHash",
                     "m:DeviceOSHash"]
         if additionId:
+            # deprecated because the memory of GPU is not big enough
             self.idlist = self.idlist + ["m:AdId", "m:ClientID"]
         if no_id:
             self.idlist = []

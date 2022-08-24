@@ -41,6 +41,16 @@ The frequencies of each unique ID are gathered. The IDs appears less than thresh
 
 The meta information is stored as Json format and in the same folder of the train.tsv.
 
+The meta Json file is like:
+metadict = {
+    "all_features": list of counting feature names,
+    "to_minus": list of number for counting feature normalization,
+    "to_div": list of number for counting feature normalization,
+    "all_ids": list of ID feature names,
+    "dicts": list of vocabulary for each ID feature,
+    "total_count": total row number of dataset
+}
+
 ## For dataset without UGE embeddings
 
 The example instructions are:

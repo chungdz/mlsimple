@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--dpath", default="data", type=str,
                         help="root path of all data")
 parser.add_argument("--drop_num", default=10, type=int,
-                        help="threshold to drop")
+                        help="Mask IDs that appears less than this threshold to unknown")
 args = parser.parse_args()
 
 filep = os.path.join(args.dpath, "freq_info.json")

@@ -16,7 +16,8 @@ parser.add_argument("--vfilep", default="valid.tsv", type=str,
                         help="valid file")
 parser.add_argument("--headp", default="header.tsv", type=str,
                         help="header file")
-parser.add_argument("--chunk_size", default=1000, type=int)
+parser.add_argument("--chunk_size", default=50000, type=int, 
+                        help="iteratively fetch chunk from disk, define the row of each chunk")
 args = parser.parse_args()
 
 filep = os.path.join(args.dpath, args.filep)

@@ -33,7 +33,6 @@ parser.add_argument("--save_path", default='cps_samples', type=str, help="path t
 parser.add_argument("--resume_checkpoint", action='store_true', help='''whether to start training from scratch 
                             or load parameter saved before and continue training. For example, if start_epoch=/mnt/cifar/checkpoint-20, then model will load parameter 
                             in the path and continue the epoch of training after 20 steps''')
-parser.add_argument("--additionId", action='store_true', help='whether to add AdId and UserId')
 parser.add_argument("--filep", default="train_5M.tsv", type=str,
                         help="train file")
 parser.add_argument("--headp", default="header.tsv", type=str,

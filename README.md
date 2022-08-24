@@ -41,7 +41,9 @@ The frequencies of each unique ID are gathered. The IDs appears less than thresh
 
 The meta information is stored as Json format and in the same folder of the train.tsv.
 
-For dataset without UGE embeddings, the example instructions are:
+## For dataset without UGE embeddings
+
+The example instructions are:
 
 ```shell
 python -m preprocess.get_meta --dpath=/data/yunfanhu/samples_20 \
@@ -55,7 +57,9 @@ python -m preprocess.process_meta --dpath=/data/yunfanhu/samples_20 \
 
 The meaning of each argument can be found in python code or use *-h*
 
-For dataset with UGE embeddings, the example instructions are:
+## For dataset with UGE embeddings
+
+The example instructions are:
 
 ```
 python -m preprocess.get_meta_emb --dpath=/data/yunfanhu/samples_emb \
@@ -70,7 +74,9 @@ python -m preprocess.process_meta --dpath=/data/yunfanhu/samples_emb \
 The meaning of each argument can be found in python code or use *-h*
 
 # Training and testing
-To train the model without UGE embeddings two codes can be run:
+
+## To train the model without UGE embeddings
+Two codes can be run:
 
 ```shell
 python train.py --dpath=/data/yunfanhu/samples_20 \
@@ -81,18 +87,45 @@ python train.py --dpath=/data/yunfanhu/samples_20 \
                     --max_steps=300000 \
                     --save_path=cps_20 \
                     --plots=plots/m1_20.jpg \
+                    --with_id=1 \
                     --save_steps=30000
 ```
 
 The meaning of each argument can be found in python code or use *-h*. This code iteratively fetch data chunk from disk to avoid memory problem when dataset is too large. The chunk size can not be too large or too small. Either case makes GPUs hungry. The arguments related to steps need to be calculate before training start. 
 
-For example, the D3 dataset has 543886254 rows. With number of GPUs in environment is 4, batch size is 2, and chunk size is 2048, the rows consumed by one step is 4 * 2 * 2048 = 16384. 
+For example, the D3 dataset has 543886254 rows. With number of GPUs in environment is 4, batch size is 2, and chunk size is 2048, the rows consumed by one step is 4 * 2 * 2048 = 16384. Therefore the step for one epoch is 543886254 / 16384 = 33197. Therefore I set max_steps as 300000 and save_steps as 30000, so that the model runs about 10 epoch and save the checkpoints per epoch.
 
-Based on the validation results, choose parameters from one epoch (i.e. epoch 3) to do the test:
+The second way to train is to fetch all data once into memory:
+
 ```shell
-CUDA_VISIBLE_DEVICES=0,1,2,3 python validate.py --gpus=4 --epoch=3 --filenum=20
+python train_rand.py --dpath=/data/yunfanhu/samples \
+                    --batch_size=512 \
+                    --filep=train_5M.tsv \
+                    --vfilep=valid_1M.tsv \
+                    --epoch=5 \
+                    --with_id=1 \
+                    --plots=plots/m1_samples.jpg \
+                    --save_path=cps_small
+
 ```
-In these instructions, argument gpus means the number of GPUs. 
+The meaning of each argument can be found in python code or use *-h*. Here the rows consumed by one step is batch_size * GPU number. The model is trained and saved epoch by epoch. It is not suggested to use the second way if dataset is large.
+
+If argument with_id is set to zero, then model with no ID features is used. 
+
+## To train the model with UGE embeddings:
+
+```shell
+python train_emb.py --dpath=/data/yunfanhu/samples_emb \
+                    --batch_size=2 \
+                    --chunk_size=2048 \
+                    --filep=train.tsv \
+                    --vfilep=valid_5M.tsv \
+                    --max_steps=300000 \
+                    --save_path=cps_emb \
+                    --plots=plots/m1_emb.jpg \
+                    --save_steps=30000
+```
+The usage of arguments is similar to *train.py*.
 
 # Experiment Environment
 This model was trained and tested by using 4 Tesla P40 GPUs. The memory of the device was 128GB.

@@ -13,21 +13,23 @@ class MGTIR(nn.Module):
         self.wd = cfg.weight_decay
         self.uaemb = cfg.uaemb
         self.seq = nn.Sequential(
-            nn.Linear(self.flen, self.hidden),
+            nn.Linear(self.flen + 1, self.hidden),
             nn.ReLU()
         )
         self.seq2 = nn.Sequential(
-            nn.Linear((self.idlen + 2) * cfg.emb_size, self.hidden // 2),
+            nn.Linear(self.idlen * cfg.emb_size, self.hidden // 2),
             nn.ReLU()
         )
-        self.seq3 = nn.Linear(self.hidden + self.hidden // 2, 1)
+        self.seq3 = nn.Sequential(
+            nn.Linear(self.hidden + self.hidden // 2, 1),
+            nn.Sigmoid())
         
         self.ufc = nn.Sequential(
-            nn.Linear(self.uaemb, cfg.emb_size),
+            nn.Linear(self.uaemb, self.uaemb),
             nn.ReLU()
         )
         self.afc = nn.Sequential(
-            nn.Linear(self.uaemb, cfg.emb_size),
+            nn.Linear(self.uaemb, self.uaemb),
             nn.ReLU()
         )
         self.cos = nn.CosineSimilarity(dim=-1)
@@ -64,16 +66,15 @@ class MGTIR(nn.Module):
         uemb = self.ufc(uemb)
         aemb = self.afc(aemb)
 
-        final_finputs = finputs[:, :-self.uaemb * 2]
-        final_idinputs = torch.cat([embt, uemb, aemb], dim=-1)
+        score = self.cos(uemb, aemb).unsqueeze(-1)
+        finputs = torch.cat([finputs[:, :-self.uaemb * 2], score], dim=-1)
 
-        concated = torch.cat([self.seq(final_finputs), self.seq2(final_idinputs)], dim=-1)
+        concated = torch.cat([self.seq(finputs), self.seq2(embt)], dim=-1)
         return self.seq3(concated)
 
-    def forward(self, finputs, idinputs, masks, labels, indexes):
+    def forward(self, finputs, idinputs, masks, labels):
 
-        raw_logits = self.predict(finputs, idinputs, masks)
-        logits = torch.sigmoid(raw_logits)
+        logits = self.predict(finputs, idinputs, masks)
 
         loss_weights = torch.clone(labels)
         loss_weights.masked_fill_(~loss_weights.bool(), self.wd)
@@ -81,7 +82,5 @@ class MGTIR(nn.Module):
 
         return {
             'loss': loss,
-            'logits': logits,
-            'raw': raw_logits,
-            'indexes': indexes
+            'logits': logits
         }

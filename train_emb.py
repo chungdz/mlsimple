@@ -48,9 +48,7 @@ parser.add_argument("--plots", default="plots/cali_train.jpg", type=str,
 args = parser.parse_args()
 
 print('load config')
-if args.additionId:
-    print('add user id and add id')
-cfg = NNConfig(args.dpath, additionId=args.additionId)
+cfg = NNConfig(args.dpath, additionId=False)
 headerp = os.path.join(args.dpath, args.headp)
 trainp = os.path.join(args.dpath, args.filep)
 validp = os.path.join(args.dpath, args.vfilep)

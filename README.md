@@ -25,7 +25,11 @@ D5: Dataset has all positive samples from original dataset and downsampled negat
 # Set Environments
 Python version should be equal or larger than 3.8. Currently Python 3.9 is used.
 
-Pytorch=1.12.1 is needed.
+Pytorch=1.12.1 is needed. For DLTS with CUDA version 11.0, the instruction is:
+```shell
+pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu110
+```
+
 
 Instruction to install other packages.
 ```shell

@@ -42,6 +42,11 @@ cd fr
                 data=/data/yunfanhu/gbm/valid.tsv \
                 input_model=LightGBM_model.txt \
                 output_result=/data/yunfanhu/gbm/LightGBM_predict_result.txt
+# calculation metrics
+python -m lightgbm.cal_metric --prob_path=/data/yunfanhu/prob/ \
+                            --gbm=/data/yunfanhu/gbm/LightGBM_predict_result.txt \
+                            --label_file=/data/yunfanhu/gbm/valid.tsv \ 
+                            --plots=plots/LightGBM.jpg 
 
 # binary classification
 "../../lightgbm" config=train_cls.conf \

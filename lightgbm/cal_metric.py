@@ -13,8 +13,6 @@ from sklearn.calibration import calibration_curve
 pd.options.mode.chained_assignment = None  # default='warn'
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--dpath", default="/data/yunfanhu/gbm/", type=str,
-                        help="root path of original data")
 parser.add_argument("--prob_path", default="/data/yunfanhu/prob/", type=str,
                         help="root path of predicted data")
 parser.add_argument("--gbm", default="/data/yunfanhu/gbm/LightGBM_predict_result.txt", type=str,

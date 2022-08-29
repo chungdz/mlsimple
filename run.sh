@@ -106,3 +106,4 @@ python nn_predict_single.py --dpath=/data/yunfanhu/samples_20 \
                             --filep=valid_5M.tsv \
                             --total_len=5000000
 
+

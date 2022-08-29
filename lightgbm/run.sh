@@ -1,13 +1,33 @@
-# first get the output of neural network
-# and transform
-python -m transform.py --dpath=/data/yunfanhu/samples_20/ \
+# Get the prediction of neural network for both trainset and validset
+# the train_prob.csv and valid_prob.csv should be moved to same folder
+python nn_predict_single.py --dpath=/data/yunfanhu/samples_20 \
+                            --save_path=cps_20 \
+                            --checkpoint=cps_20/m1_0821_raw/pytorch_model.bin \
+                            --resp=train_prob.tsv \
+                            --filep=train.tsv \
+                            --total_len=543886254
+
+python nn_predict_single.py --dpath=/data/yunfanhu/samples_20 \
+                            --save_path=cps_20 \
+                            --checkpoint=cps_20/m1_0821_raw/pytorch_model.bin \
+                            --resp=valid_prob.tsv \
+                            --filep=valid_5M.tsv \
+                            --total_len=5000000
+
+# Get the output of neural network and transform
+# train.tsv and valid_5M.tsv is in --dpath
+# train_prob.csv and valid_prob.csv are in --prob_path
+# outputs in --out_path are trainset and validset for lightgbm
+python -m preprocess.transform --dpath=/data/yunfanhu/samples_20/ \
                         --prob_path=/data/yunfanhu/prob/ \
                         --out_path=/data/yunfanhu/gbm/
 
-# prepare LightGBM
+# install newest cmake in DLTS
+# use pip install because no sodu access
+# use hash -r to update path
 pip install cmake
 hash -r
-# install CLI version of LightGBM
+# download and compile CLI version of LightGBM
 git clone --recursive https://github.com/microsoft/LightGBM
 cd LightGBM
 mkdir build
@@ -15,18 +35,19 @@ cd build
 cmake ..
 make -j4
 
-# make new directory
+# make new directory to save config files
 cd ../examples/
 mkdir fr
 cd fr
 
 # put the train.conf and predict.conf into fr folder
-# first time run
+# first time train
 "../../lightgbm" config=train.conf \
                 is_save_binary_file=true \
                 data=/data/yunfanhu/gbm/train.tsv \
                 valid_data=/data/yunfanhu/gbm/valid.tsv
 
+# secpnd time train can be faster by using binary files
 # first time load data from text files
 # label_column ignore_column categorical_feature is needed
 # save binary will save smaller binary dataset with same_name.bin
@@ -43,6 +64,7 @@ cd fr
                 input_model=LightGBM_model.txt \
                 output_result=/data/yunfanhu/gbm/LightGBM_predict_result.txt
 # calculation metrics
+# combine output of neural network and lightgbm and get performance
 python -m lightgbm.cal_metric --prob_path=/data/yunfanhu/prob/ \
                             --gbm=/data/yunfanhu/gbm/LightGBM_predict_result.txt \
                             --label_file=/data/yunfanhu/gbm/valid.tsv \

@@ -59,7 +59,7 @@ pip install datasets transformers tensorboard sklearn lightgbm matplotlib ipytho
 ``` 
 
 # Get meta infomation of different features
-Before train the model, meta infomation should be gathered to help transform the data. 
+Before train the model, meta infomation should be gathered to help transform the data. Dataset with UGE embeddings and without UGE embeddings are now save in different folder. The meta data for them should be collect separately.
 
 Min and max of the counting features are collected. It is better than mean and standard diviation for normalizing the counting feature. First, min and max are easy to collect and do not need to calculate. Second, for features only have zero and one, the normalized featrue stays the same. Third, for features has only one unique number, it avoids number divided by zero.
 

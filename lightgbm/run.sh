@@ -37,7 +37,7 @@ cd fr
                 valid_data=/data/yunfanhu/gbm/valid.tsv.bin
 
 # predict
-# use the binary file saved before
+# can not use the binary file saved before
 "../../lightgbm" config=predict.conf \
                 data=/data/yunfanhu/gbm/valid.tsv \
                 input_model=LightGBM_model.txt \
@@ -45,7 +45,7 @@ cd fr
 # calculation metrics
 python -m lightgbm.cal_metric --prob_path=/data/yunfanhu/prob/ \
                             --gbm=/data/yunfanhu/gbm/LightGBM_predict_result.txt \
-                            --label_file=/data/yunfanhu/gbm/valid.tsv \ 
+                            --label_file=/data/yunfanhu/gbm/valid.tsv \
                             --plots=plots/LightGBM.jpg 
 
 # binary classification
@@ -53,4 +53,14 @@ python -m lightgbm.cal_metric --prob_path=/data/yunfanhu/prob/ \
                 is_save_binary_file=true \
                 data=/data/yunfanhu/gbm_cls/train.tsv \
                 valid_data=/data/yunfanhu/gbm_cls/valid.tsv
+# predict
+"../../lightgbm" config=predict_cls.conf \
+                data=/data/yunfanhu/gbm_cls/valid.tsv \
+                input_model=LightGBM_model_cls.txt \
+                output_result=/data/yunfanhu/gbm_cls/LightGBM_predict_result.txt
+# begging and calculate metric
+python -m lightgbm.cal_metric --prob_path=/data/yunfanhu/prob/ \
+                            --gbm=/data/yunfanhu/gbm_cls/LightGBM_predict_result.txt \
+                            --label_file=/data/yunfanhu/gbm_cls/valid.tsv \
+                            --plots=plots/LightGBM.jpg 
 

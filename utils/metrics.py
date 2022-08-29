@@ -97,7 +97,7 @@ def cal_metric(labels, preds, metrics):
             raise ValueError("not define this metric {0}".format(metric))
     return res
 
-def cm(y_pred, y_target):
+def cm(y_pred, y_target, k=5000000):
 
     precision, recall, _ = precision_recall_curve(y_target, y_pred)
     Z = np.stack((y_target, y_pred), axis=1).astype(np.float64)

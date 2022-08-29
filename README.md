@@ -25,11 +25,33 @@ D5: Dataset has all positive samples from original dataset and downsampled negat
 # Set Environments
 Python version should be equal or larger than 3.8. Currently Python 3.9 is used.
 
+Download Miniconda to deploy python environment on the [website](https://docs.conda.io/en/latest/miniconda.html).
+
+```shell
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+```
+
+Chmod if no execution permission and run it to install Miniconda.
+
+```shell
+Chmod 700 https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+```
+
+After the installation finish, it will ask whether to start conda from bash. Type yes.
+
+To activate conda:
+
+```shell
+source ~/.bashrc
+```
+
+Current Python environment for base is 3.9.
+
 Pytorch=1.12.1 is needed. For DLTS with CUDA version 11.0, the instruction is:
 ```shell
 pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu110
 ```
-
 
 Instruction to install other packages.
 ```shell

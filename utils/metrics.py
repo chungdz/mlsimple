@@ -112,7 +112,7 @@ def cm(y_pred, y_target, k=5000000):
     return {
         "ROC AUC": roc_auc_score(y_target, y_pred),
         "MRR": mrr_score(y_target, y_pred),
-        "nDCG": ndcg_score(y_target, y_pred, k=y_pred.shape[0] // 10),
+        "nDCG": ndcg_score(y_target, y_pred, k=y_pred.shape[0] // 10, k=k),
         "Precison-Recall AUC": auc(recall, precision),
         "RIG": rig
     }

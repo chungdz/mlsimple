@@ -48,7 +48,7 @@ source ~/.bashrc
 
 Current Python environment for base is 3.9.
 
-Pytorch=1.12.1 is needed. For DLTS with CUDA version 11.0, the instruction is:
+Pytorch=1.12.1 is needed. For DLTS with CUDA version 11.0 (supported by DeepScale2.1-Regular framework), the instruction is:
 ```shell
 pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu110
 ```

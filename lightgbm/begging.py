@@ -30,13 +30,12 @@ vp = pd.read_csv(vpp, sep='\t')
 gbmp = pd.read_csv(args.gbm, names=["GBMPrediction"])
 label = pd.read_csv(args.label_file, sep='\t', usecols=[2], names=['Label'])
 
-sig = 1/(1 + np.exp(-vp['Prediction'].values))
-emsemble = 0.5 * sig + 0.5 * gbmp["GBMPrediction"].values
-
+emsemble = 0.5 * vp['Prediction'] + 0.5 * gbmp["GBMPrediction"]
+sig = 1/(1 + np.exp(-emsemble.values))
 label_ids = label['Label'].values
-print(cm(emsemble, label_ids))
+print(cm(sig, label_ids))
 
-ctrue, cpred = calibration_curve(label_ids, emsemble, n_bins=500, strategy="quantile", pos_label=1)
+ctrue, cpred = calibration_curve(label_ids, sig, n_bins=500, strategy="quantile", pos_label=1)
 plt.xlabel('PredictedRate')
 plt.ylabel('TrueRate')
 plt.gca().set_aspect('equal', 'box')

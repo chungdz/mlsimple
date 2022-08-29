@@ -59,8 +59,8 @@ python -m lightgbm.cal_metric --prob_path=/data/yunfanhu/prob/ \
                 input_model=LightGBM_model_cls.txt \
                 output_result=/data/yunfanhu/gbm_cls/LightGBM_predict_result.txt
 # begging and calculate metric
-python -m lightgbm.cal_metric --prob_path=/data/yunfanhu/prob/ \
+python -m lightgbm.begging --prob_path=/data/yunfanhu/prob/ \
                             --gbm=/data/yunfanhu/gbm_cls/LightGBM_predict_result.txt \
                             --label_file=/data/yunfanhu/gbm_cls/valid.tsv \
-                            --plots=plots/LightGBM.jpg 
+                            --plots=plots/emsemble.jpg 
 

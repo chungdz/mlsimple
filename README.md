@@ -31,11 +31,11 @@ Download Miniconda to deploy python environment on the [website](https://docs.co
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 ```
 
-Chmod if no execution permission and run it to install Miniconda.
+Change permission mode if no execution permission and run it to install Miniconda.
 
 ```shell
-Chmod 700 https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+Chmod 700 Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
 ```
 
 After the installation finish, it will ask whether to start conda from bash. Type yes.

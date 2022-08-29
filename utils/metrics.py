@@ -97,7 +97,7 @@ def cal_metric(labels, preds, metrics):
             raise ValueError("not define this metric {0}".format(metric))
     return res
 
-def cm(y_pred, y_target, k=5000000):
+def cm(y_pred, y_target):
 
     precision, recall, _ = precision_recall_curve(y_target, y_pred)
     Z = np.stack((y_target, y_pred), axis=1).astype(np.float64)
@@ -112,7 +112,7 @@ def cm(y_pred, y_target, k=5000000):
     return {
         "ROC AUC": roc_auc_score(y_target, y_pred),
         "MRR": mrr_score(y_target, y_pred),
-        "nDCG": ndcg_score(y_target, y_pred, k=y_pred.shape[0] // 10, k=k),
+        "nDCG": ndcg_score(y_target, y_pred, k=y_pred.shape[0]),
         "Precison-Recall AUC": auc(recall, precision),
         "RIG": rig
     }

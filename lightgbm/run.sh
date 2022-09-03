@@ -14,6 +14,12 @@ python nn_predict_single.py --dpath=/data/yunfanhu/samples_20 \
                             --filep=valid_5M.tsv \
                             --total_len=5000000
 
+# Also manually make train.tsv.init and valid.tsv.init
+# They can be generated based on train_prob.tsv and valid_prob.tsv
+# If init score is needed. In this case, the init score is the raw output of the neural network
+# The format is one result one line
+# Check https://lightgbm.readthedocs.io/en/latest/Parameters.html#continued-training-with-input-score for instruction
+
 # Get the output of neural network and transform
 # train.tsv and valid_5M.tsv is in --dpath
 # train_prob.csv and valid_prob.csv are in --prob_path

@@ -13,8 +13,7 @@ class NoID(nn.Module):
         self.seq = nn.Sequential(
             nn.Linear(self.flen, self.hidden),
             nn.ReLU(),
-            nn.Linear(self.hidden, 1),
-            nn.Sigmoid()
+            nn.Linear(self.hidden, 1)
         )
         self.seq2 = nn.Sequential(
             nn.Linear(self.flen, 10000),
@@ -27,19 +26,23 @@ class NoID(nn.Module):
         
     def predict(self, finputs, idinputs):
         # to avoid being canceled
-        self.seq2(finputs)
+        # self.seq2(finputs)
         return self.seq(finputs)
 
-    def forward(self, finputs, idinputs, labels):
+    def forward(self, finputs, idinputs, labels, indexes):
 
-        logits = self.predict(finputs, idinputs)
+        raw_logits = self.predict(finputs, idinputs)
+        logits = torch.sigmoid(raw_logits)
+
         loss_weights = torch.clone(labels)
         loss_weights.masked_fill_(~loss_weights.bool(), self.wd)
         loss = F.binary_cross_entropy(logits.squeeze(), labels, weight=loss_weights)
 
         return {
             'loss': loss,
-            'logits': logits
+            'logits': logits,
+            'raw': raw_logits,
+            'indexes': indexes
         }
 
 

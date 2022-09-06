@@ -92,4 +92,10 @@ python -m lightgbm.begging --prob_path=/data/yunfanhu/prob/ \
                             --label_file=/data/yunfanhu/gbm_cls/valid.tsv \
                             --plots=plots/emsemble.jpg 
 
+# binary classification
+"../../lightgbm" config=train_cls.conf \
+                is_save_binary_file=false \
+                data=/data/yunfanhu/gbm_cls_2/train.tsv.bin \
+                valid_data=/data/yunfanhu/gbm_cls_2/valid.tsv.bin
+
 

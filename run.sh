@@ -74,8 +74,8 @@ python -m utils.plot_two_cali --spath=plots/two.jpg \
                                 --points=500 \
                                 --sample=quantile
 
-python -m utils.plot_one_cali --spath=plots/one.jpg \
-                                --res=cps2/res.csv \
+python -m utils.plot_one_cali --spath=plots/baseline.jpg \
+                                --res=cps_20/res.csv \
                                 --points=500 \
                                 --sample=quantile
 

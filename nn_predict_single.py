@@ -31,7 +31,7 @@ parser.add_argument("--save_path", default='cps_20/', type=str, help="path to sa
 parser.add_argument("--checkpoint", default='cps_20/m1_0821_raw/pytorch_model.bin', type=str, help="path to save training model parameters")
 parser.add_argument("--filep", default="train.tsv", type=str,
                         help="train file")
-parser.add_argument("--resp", default="prob.tsv", type=str,
+parser.add_argument("--resp", default="train.tsv.bin.init", type=str,
                         help="train file")
 parser.add_argument("--headp", default="header.tsv", type=str,
                         help="train file")
@@ -89,22 +89,22 @@ with torch.no_grad():
 total_row = len(preds)
 print('raw min and max', min(preds), max(preds), 'total row', total_row)
 final_res = np.zeros((total_row))
-target = np.zeros((total_row))
+# target = np.zeros((total_row))
 for elem, idx, clabel in tqdm(zip(preds, imp_ids, truths), total=total_row, desc='reorganize'):
     final_res[idx] = elem
-    if clabel == 0:
-        target[idx] = -15 - elem
-    else:
-        target[idx] = 15 - elem
+    # if clabel == 0:
+    #     target[idx] = -15 - elem
+    # else:
+    #     target[idx] = 15 - elem
 
 print('number of blank', (final_res == 0).sum())
 print('save')
 with open(resp, 'w', encoding='utf-8') as f:
-    f.write('Prediction' + '\t' + 'Target\n')
+    # f.write('Prediction' + '\t' + 'Target\n')
     for i in range(total_row):
         f.write(str(final_res[i]))
-        f.write('\t')
-        f.write(str(target[i]))
+        # f.write('\t')
+        # f.write(str(target[i]))
         f.write('\n')
 
 # print('calculate metrics')

@@ -72,7 +72,7 @@ class MGTIR(nn.Module):
         concated = torch.cat([self.seq(finputs), self.seq2(embt)], dim=-1)
         return self.seq3(concated)
 
-    def forward(self, finputs, idinputs, masks, labels, indexes):
+    def forward(self, finputs, idinputs, masks, labels):
 
         logits = self.predict(finputs, idinputs, masks)
 
@@ -82,6 +82,5 @@ class MGTIR(nn.Module):
 
         return {
             'loss': loss,
-            'logits': logits,
-            'indexes': indexes
+            'logits': logits
         }

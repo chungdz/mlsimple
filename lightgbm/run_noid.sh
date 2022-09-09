@@ -15,3 +15,14 @@ python nn_predict_single.py --dpath=/data/yunfanhu/samples_20 \
                             --filep=valid_5M.tsv \
                             --with_id=0 \
                             --total_len=5000000
+
+"../../lightgbm" config=train_cls.conf \
+                is_save_binary_file=false \
+                data=/data/yunfanhu/gbm_cls_noid/train.tsv.bin \
+                valid_data=/data/yunfanhu/gbm_cls_noid/valid.tsv.bin
+
+"../../lightgbm" config=train.conf \
+                is_save_binary_file=false \
+                data=/work/tmp2/train.tsv \
+                valid_data=/work/tmp2/valid.tsv
+
